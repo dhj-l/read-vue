@@ -5,6 +5,7 @@ import router from "./router";
 import ElementPlus from "element-plus";
 import "element-plus/dist/index.css";
 import "./style/index.css";
+import zhCn from "element-plus/es/locale/lang/zh-cn";
 import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 // 创建应用实例
 const app = createApp(App);
@@ -18,4 +19,10 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 const pinia = createPinia();
 
 // 使用插件
-app.use(pinia).use(router).use(ElementPlus).mount("#app");
+app
+  .use(pinia)
+  .use(router)
+  .use(ElementPlus, {
+    locale: zhCn,
+  })
+  .mount("#app");

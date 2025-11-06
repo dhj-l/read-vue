@@ -1,4 +1,5 @@
 import type { TableColumns } from "@/layout/users/type";
+import dayjs from "dayjs";
 
 export const tableColumns: TableColumns[] = [
   {
@@ -24,12 +25,17 @@ export const tableColumns: TableColumns[] = [
     align: "center",
   },
   {
-    prop: "createdAt",
+    prop: "status",
+    label: "状态",
+    align: "center",
+  },
+  {
+    prop: "createTime",
     label: "创建时间",
     align: "center",
   },
   {
-    prop: "updatedAt",
+    prop: "updateTime",
     label: "更新时间",
     align: "center",
   },
@@ -40,3 +46,42 @@ export const tableColumns: TableColumns[] = [
     fixed: "right",
   },
 ];
+
+export const rolesColumns: TableColumns[] = [
+  {
+    prop: "id",
+    label: "ID",
+    align: "center",
+    width: 80,
+  },
+  {
+    prop: "name",
+    label: "角色名称",
+    align: "center",
+  },
+  {
+    prop: "value",
+    label: "角色值",
+    align: "center",
+  },
+  {
+    prop: "createTime",
+    label: "创建时间",
+    align: "center",
+  },
+  {
+    prop: "updateTime",
+    label: "更新时间",
+    align: "center",
+  },
+  {
+    prop: "actions",
+    label: "操作",
+    align: "center",
+    fixed: "right",
+  },
+];
+
+export const formateTime = (time: string) => {
+  return dayjs(time).format("YYYY-MM-DD");
+};
