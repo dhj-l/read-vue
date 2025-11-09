@@ -69,7 +69,14 @@
         @size-change="getRoles"
       />
     </div>
-    <AddRoles v-model="open" />
+    <AddRoles
+      v-model="open"
+      :type="type"
+      @submit="addRoleHandler"
+      @close="closeHandler"
+      :role-data="roleData"
+      :role-id="roleData?.id"
+    />
   </div>
 </template>
 
@@ -89,8 +96,12 @@ const {
   searchKeyword,
   btnConfig,
   open,
+  type,
+  roleData,
   getRoles,
   resetHandler,
+  addRoleHandler,
+  closeHandler,
 } = useRoles();
 
 onMounted(() => {

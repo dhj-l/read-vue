@@ -37,9 +37,7 @@
             <!-- 动态渲染菜单 -->
             <template v-for="route in menuRoutes" :key="route.path">
               <!-- 单级菜单 -->
-              <el-menu-item
-                :index="getMenuPath(route)"
-              >
+              <el-menu-item :index="getMenuPath(route)">
                 <el-icon>
                   <component :is="toRaw(route.meta?.icon)" />
                 </el-icon>
@@ -131,15 +129,6 @@
             <router-view />
           </div>
         </el-main>
-
-        <!-- 底部 -->
-        <el-footer
-          class="bg-white border-t border-gray-200 text-center text-gray-500 text-sm"
-        >
-          <div class="flex items-center justify-center h-full">
-            <span>© 2024 管理系统. All rights reserved.</span>
-          </div>
-        </el-footer>
       </el-container>
     </el-container>
   </div>

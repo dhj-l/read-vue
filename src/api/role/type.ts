@@ -12,3 +12,9 @@ export interface RoleListParams {
   pageSize?: number;
   name?: string;
 }
+
+export interface AddRoleRequest {
+  id?: number;
+  name: string;
+  value: string;
+}

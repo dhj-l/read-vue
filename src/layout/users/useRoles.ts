@@ -1,6 +1,9 @@
-import { getRolesAPI } from "@/api/role/role";
+import { deleteRoleAPI, getRolesAPI } from "@/api/role/role";
 import type { RoleItem } from "@/api/user/type";
 import { ref } from "vue";
+import type { AddRolesType } from "./components/type";
+import type { AddRoleRequest } from "@/api/role/type";
+import { ElMessage, ElMessageBox } from "element-plus";
 
 export const useRoles = () => {
   const roles = ref<RoleItem[]>([]);
@@ -8,8 +11,10 @@ export const useRoles = () => {
   const total = ref(0);
   const page = ref(1);
   const pageSize = ref(10);
+  const type = ref<AddRolesType>("add");
   const searchKeyword = ref("");
   const open = ref(false);
+  const roleData = ref<AddRoleRequest>();
   const getRoles = async () => {
     loading.value = true;
     try {
@@ -32,6 +37,26 @@ export const useRoles = () => {
     getRoles();
   };
 
+  /**
+   * 添加角色回调
+   */
+  const addRoleHandler = () => {
+    getRoles();
+  };
+  const closeHandler = () => {
+    type.value = "add";
+    roleData.value = undefined;
+  };
+  const handleEdit = (row: RoleItem) => {
+    type.value = "edit";
+    roleData.value = row;
+    open.value = true;
+  };
+  const handleDelete = async (id: number) => {
+    await deleteRoleAPI(id);
+    ElMessage.success("删除角色成功");
+    getRoles();
+  };
   const btnConfig = [
     {
       label: "修改",
@@ -40,7 +65,7 @@ export const useRoles = () => {
         link: true,
       },
       click: (row: RoleItem) => {
-        console.log(row);
+        handleEdit(row);
       },
     },
     {
@@ -50,7 +75,13 @@ export const useRoles = () => {
         link: true,
       },
       click: (row: RoleItem) => {
-        console.log(row);
+        ElMessageBox.confirm(`确定删除角色 ${row.name} 吗？`, "警告", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }).then(() => {
+          handleDelete(row.id);
+        });
       },
     },
   ];
@@ -63,7 +94,11 @@ export const useRoles = () => {
     searchKeyword,
     btnConfig,
     open,
+    type,
+    roleData,
     getRoles,
     resetHandler,
+    addRoleHandler,
+    closeHandler,
   };
 };
