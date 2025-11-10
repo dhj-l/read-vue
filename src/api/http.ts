@@ -1,6 +1,4 @@
 import axios from "axios";
-import { ElMessage } from "element-plus";
-import router from "@/router/index";
 import emitter from "@/utils/eventEmitter";
 const http = axios.create({
   baseURL: "http://127.0.0.1:3000/api/v1",
@@ -16,7 +14,7 @@ http.interceptors.request.use(
     return config;
   },
   (error) => {
-    ElMessage.error("请求失败");
+    emitter.emit("requestError", error.message || "请求失败");
     return Promise.reject(error);
   }
 );
@@ -33,7 +31,6 @@ http.interceptors.response.use(
       // 返回一个resolved的promise，阻止错误继续传播
       return Promise.resolve({ data: null });
     } else {
-      // ElMessage.error(response?.data?.message || "请求失败");
       emitter.emit("requestError", response?.data?.message || "请求失败");
       return Promise.reject(error);
     }

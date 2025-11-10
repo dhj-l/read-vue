@@ -5,8 +5,9 @@ import {
   getUserListAPI,
   unbanUserAPI,
 } from "@/api/user/user";
-import { ElMessage, ElMessageBox } from "element-plus";
+import { ElMessage } from "element-plus";
 import { ref } from "vue";
+import { messageHandle } from "./config";
 
 export const useUserList = () => {
   // 搜索关键词
@@ -86,12 +87,12 @@ export const useUserList = () => {
       // 只有正常用户才能被封禁
       visible: (row: UserItem) => row.status === UserStatus.Active,
       click: (row: UserItem) => {
-        ElMessageBox.confirm(`确定封禁用户 ${row.username} 吗？`, "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
+        messageHandle({
+          message: `确定封禁用户 ${row.username} 吗？`,
           type: "warning",
-        }).then(() => {
-          banUser(row.id);
+          confirmText: "确定",
+          cancelText: "取消",
+          handle: () => banUser(row.id),
         });
       },
     },
@@ -104,12 +105,12 @@ export const useUserList = () => {
       // 只有封禁用户才能被解封
       visible: (row: UserItem) => row.status === UserStatus.Disabled,
       click: (row: UserItem) => {
-        ElMessageBox.confirm(`确定解封用户 ${row.username} 吗？`, "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
+        messageHandle({
+          message: `确定解封用户 ${row.username} 吗？`,
           type: "warning",
-        }).then(() => {
-          unbanUser(row.id);
+          confirmText: "确定",
+          cancelText: "取消",
+          handle: () => unbanUser(row.id),
         });
       },
     },

@@ -1,5 +1,7 @@
 import type { TableColumns } from "@/layout/users/type";
 import dayjs from "dayjs";
+import type { MessageProps } from "./type";
+import { ElMessageBox } from "element-plus";
 
 export const tableColumns: TableColumns[] = [
   {
@@ -84,4 +86,23 @@ export const rolesColumns: TableColumns[] = [
 
 export const formateTime = (time: string) => {
   return dayjs(time).format("YYYY-MM-DD");
+};
+
+export enum MessageTypeText {
+  success = "成功",
+  warning = "警告",
+  danger = "危险",
+  info = "信息",
+  primary = "主要",
+  error = "错误",
+}
+
+export const messageHandle = (props: MessageProps) => {
+  ElMessageBox.confirm(props.message, MessageTypeText[props.type || "info"], {
+    confirmButtonText: props.confirmText || "确定",
+    cancelButtonText: props.cancelText || "取消",
+    type: props.type || "info",
+  }).then(async () => {
+    await props.handle();
+  });
 };

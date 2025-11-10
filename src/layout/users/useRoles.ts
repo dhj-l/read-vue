@@ -3,7 +3,8 @@ import type { RoleItem } from "@/api/user/type";
 import { ref } from "vue";
 import type { AddRolesType } from "./components/type";
 import type { AddRoleRequest } from "@/api/role/type";
-import { ElMessage, ElMessageBox } from "element-plus";
+import { ElMessage } from "element-plus";
+import { messageHandle } from "./config";
 
 export const useRoles = () => {
   const roles = ref<RoleItem[]>([]);
@@ -75,12 +76,12 @@ export const useRoles = () => {
         link: true,
       },
       click: (row: RoleItem) => {
-        ElMessageBox.confirm(`确定删除角色 ${row.name} 吗？`, "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
+        messageHandle({
+          message: `确定删除角色 ${row.name} 吗？`,
           type: "warning",
-        }).then(() => {
-          handleDelete(row.id);
+          confirmText: "确定",
+          cancelText: "取消",
+          handle: () => handleDelete(row.id),
         });
       },
     },
