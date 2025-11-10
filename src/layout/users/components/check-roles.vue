@@ -4,7 +4,7 @@
     :indeterminate="isIndeterminate"
     @change="handleCheckAllChange"
   >
-    Check all
+    全选
   </el-checkbox>
   <el-checkbox-group
     v-model="checkedCities"

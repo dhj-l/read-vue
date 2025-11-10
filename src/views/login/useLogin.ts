@@ -4,6 +4,7 @@ import { ElMessage, type ElForm } from "element-plus";
 import { getCodeAPI, registerAPI } from "../../api/login/login";
 import { useUserStore } from "@/stores/modules/user/user";
 import { useRouter } from "vue-router";
+import emitter from "@/utils/eventEmitter";
 export const useLogin = () => {
   const loginOrRegister = ref<"login" | "register">("login");
   const loadding = ref(false);
@@ -133,7 +134,7 @@ export const useLogin = () => {
       } else {
         await login(formData.value);
         ElMessage.success("登录成功");
-        router.push({ name: "Home" });
+        emitter.emit("login");
       }
     } finally {
       submitLoading.value = false;
