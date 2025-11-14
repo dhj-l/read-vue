@@ -7,6 +7,8 @@ import "element-plus/dist/index.css";
 import "./style/index.css";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 import * as ElementPlusIconsVue from "@element-plus/icons-vue";
+import "@/ui/messageHandler";
+import "@/router/authHandler";
 // 创建应用实例
 const app = createApp(App);
 

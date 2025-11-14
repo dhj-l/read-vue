@@ -1,9 +1,9 @@
 <
 <template>
   <div class="h-full flex flex-col">
-    <div class="mb-4">
+    <div class="mb-4 shadow-sm p-4 rounded-lg border border-gray-200">
       <!-- 搜索和操作区域 -->
-      <div class="flex justify-between items-center mb-4">
+      <div class="flex justify-between items-center">
         <div class="flex space-x-2">
           <el-input
             placeholder="搜索角色名称"
@@ -29,7 +29,9 @@
     </div>
 
     <!-- 表格区域 -->
-    <div class="flex-1 overflow-auto">
+    <div
+      class="flex-1 overflow-auto shadow-sm p-4 rounded-lg border border-gray-200"
+    >
       <el-table border stripe class="h-full" :data="roles" v-loading="loading">
         <template v-for="column in rolesColumns" :key="column.prop">
           <el-table-column v-bind="column">
@@ -82,10 +84,11 @@
 
 <script setup lang="ts">
 import { Search } from "@element-plus/icons-vue";
-import { formateTime, rolesColumns } from "@/layout/users/config";
+import { rolesColumns } from "@/layout/users/config";
 import { useRoles } from "@/layout/users/useRoles";
 import { onMounted } from "vue";
 import AddRoles from "./components/add-roles.vue";
+import { formateTime } from "@/utils/formdate";
 
 const {
   roles,

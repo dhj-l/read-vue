@@ -1,5 +1,4 @@
 import type { TableColumns } from "@/layout/users/type";
-import dayjs from "dayjs";
 import type { MessageProps } from "./type";
 import { ElMessageBox } from "element-plus";
 
@@ -83,10 +82,6 @@ export const rolesColumns: TableColumns[] = [
     fixed: "right",
   },
 ];
-
-export const formateTime = (time: string) => {
-  return dayjs(time).format("YYYY-MM-DD");
-};
 
 export enum MessageTypeText {
   success = "成功",

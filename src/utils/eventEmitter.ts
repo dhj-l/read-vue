@@ -4,7 +4,11 @@ import mitt from "mitt";
 type Events = {
   noAuth: void;
   requestError: string;
-  login: void;
+  login: string;
+  message: {
+    type: "success" | "error" | "warning" | "info";
+    content: string;
+  };
 };
 
 const emitter = mitt<Events>();

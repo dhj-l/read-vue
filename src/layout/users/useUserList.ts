@@ -90,8 +90,6 @@ export const useUserList = () => {
         messageHandle({
           message: `确定封禁用户 ${row.username} 吗？`,
           type: "warning",
-          confirmText: "确定",
-          cancelText: "取消",
           handle: () => banUser(row.id),
         });
       },
@@ -108,8 +106,6 @@ export const useUserList = () => {
         messageHandle({
           message: `确定解封用户 ${row.username} 吗？`,
           type: "warning",
-          confirmText: "确定",
-          cancelText: "取消",
           handle: () => unbanUser(row.id),
         });
       },

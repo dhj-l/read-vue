@@ -1,7 +1,7 @@
 <template>
   <div class="h-full flex flex-col">
-    <div class="mb-4">
-      <div class="flex justify-between items-center mb-4">
+    <div class="mb-4 shadow-sm p-4 rounded-lg border border-gray-200">
+      <div class="flex justify-between items-center">
         <div class="flex space-x-2">
           <el-input
             v-model="searchKeyword"
@@ -35,7 +35,9 @@
     </div>
 
     <!-- 表格区域 -->
-    <div class="flex-1 overflow-auto">
+    <div
+      class="flex-1 overflow-auto shadow-sm p-4 rounded-lg border border-gray-200"
+    >
       <el-table
         border
         stripe
@@ -56,7 +58,7 @@
           </template>
           <template #="{ row }" v-else-if="column.prop === 'role'">
             <template v-if="row.roles.length > 0">
-              <el-tag class="mr-1" v-for="role in row.roles" :key="role">{{
+              <el-tag class="mr-1 mb-1" v-for="role in row.roles" :key="role">{{
                 role.name
               }}</el-tag>
             </template>
@@ -115,11 +117,12 @@
 
 <script setup lang="ts">
 import { Search } from "@element-plus/icons-vue";
-import { formateTime, tableColumns } from "./config";
+import {  tableColumns } from "./config";
 import { onMounted } from "vue";
 import { useUserList } from "./useUserList";
 import { UserStatus } from "@/api/user/type";
 import CheckRoles from "./components/check-roles.vue";
+import { formateTime } from "@/utils/formdate";
 const {
   searchKeyword,
   page,
