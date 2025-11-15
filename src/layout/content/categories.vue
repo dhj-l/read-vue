@@ -1,7 +1,7 @@
 <template>
   <div class="h-full flex flex-col">
     <!-- 搜索和操作区域 -->
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-4">
       <div class="flex justify-between items-center">
         <div class="flex space-x-2">
           <el-input

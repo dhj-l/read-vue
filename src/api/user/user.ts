@@ -6,7 +6,7 @@ import type { UserListParams, UserListResponse } from "./type";
  * @param params
  * @returns
  */
-export const getUserListAPI = async (params: UserListParams) => {
+export const getUserListAPI = async (params: Partial<UserListParams>) => {
   return await http.get<UserListResponse>("/user/all", {
     params,
   });

@@ -39,17 +39,6 @@ export const layoutRoutes: RouteRecordRaw[] = [
           requireAuth: true,
         },
       },
-      // 内容管理模块
-      {
-        path: "articles",
-        name: "Articles",
-        component: () => import("@/layout/content/articles.vue"),
-        meta: {
-          title: "文章管理",
-          icon: "DocumentCopy",
-          requireAuth: true,
-        },
-      },
       {
         path: "categories",
         name: "Categories",
@@ -60,14 +49,13 @@ export const layoutRoutes: RouteRecordRaw[] = [
           requireAuth: true,
         },
       },
-      // 系统设置
       {
-        path: "settings",
-        name: "Settings",
-        component: () => import("@/layout/settings/settings.vue"),
+        path: "works",
+        name: "Works",
+        component: () => import("@/layout/works/works.vue"),
         meta: {
-          title: "系统设置",
-          icon: "Setting",
+          title: "作品管理",
+          icon: "DocumentCopy",
           requireAuth: true,
         },
       },
