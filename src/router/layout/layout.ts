@@ -59,6 +59,16 @@ export const layoutRoutes: RouteRecordRaw[] = [
           requireAuth: true,
         },
       },
+      {
+        path: "book-checks",
+        name: "BookChecks",
+        component: () => import("@/layout/checks/book-checks.vue"),
+        meta: {
+          title: "审核管理",
+          icon: "Edit",
+          requireAuth: true,
+        },
+      },
     ],
   },
 ];
