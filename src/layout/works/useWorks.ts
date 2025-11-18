@@ -6,6 +6,9 @@ import { getCategoryListAPI } from "@/api/category/category";
 import type { ButtonConfig } from "../content/type";
 import type { Work } from "@/api/works/type";
 import type WorkList from "./components/workList.vue";
+import { setWorkCategoryAPI } from "@/api/works/works";
+import type { Category } from "@/api/category/type";
+import emitter from "@/utils/eventEmitter";
 
 export const useWorks = () => {
   const worksSearchQuery = ref<WorksSearchQuery>({
@@ -17,6 +20,7 @@ export const useWorks = () => {
     page: 1,
     pageSize: 10,
   });
+  const categoryIds = ref<number[]>([]);
   const workListRef = ref<ComponentInstance<typeof WorkList>>();
   const open = ref<boolean>(false);
   const userOptions = ref<
@@ -73,8 +77,11 @@ export const useWorks = () => {
     };
     workListRef.value?.getWorkList(worksSearchQuery.value);
   };
-  const handleSave = () => {
+  const handleSave = async () => {
     drawer.value = false;
+
+    await handleSetCategories(currentWork.value.id, categoryIds.value);
+    workListRef.value?.getWorkList(worksSearchQuery.value);
   };
   const worksSearchConfig = computed<WorksSearchConfigItem[]>(() => [
     {
@@ -146,7 +153,18 @@ export const useWorks = () => {
       },
     },
   ]);
-
+  const handleCheckedCategoriesChange = (categories: Category[]) => {
+    categoryIds.value = categories.map((item) => item.id);
+  };
+  const handleSetCategories = async (id: number, categories: number[]) => {
+    await setWorkCategoryAPI(id, {
+      categoryIds: categories,
+    });
+    emitter.emit("message", {
+      type: "success",
+      content: "设置成功",
+    });
+  };
   const btnConfig = ref<ButtonConfig<Work>[]>([
     {
       label: "编辑",
@@ -179,5 +197,6 @@ export const useWorks = () => {
     categoryOptions,
     getCategoryList,
     handleSave,
+    handleCheckedCategoriesChange,
   };
 };

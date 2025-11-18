@@ -38,7 +38,11 @@
       @refresh="searchWorks"
     />
     <el-drawer v-model="drawer" title="设置分类">
-      <CheckCategories :open="drawer" :categories="currentWork.categorys" />
+      <CheckCategories
+        :open="drawer"
+        :categories="currentWork.categorys"
+        @change="handleCheckedCategoriesChange"
+      />
       <template #footer>
         <el-button type="primary" @click="handleSave">保存</el-button>
         <el-button @click="drawer = false">取消</el-button>
@@ -65,6 +69,7 @@ const {
   handleSave,
   searchWorks,
   resetWorksSearchQuery,
+  handleCheckedCategoriesChange,
 } = useWorks();
 </script>
 

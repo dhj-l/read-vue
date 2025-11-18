@@ -30,7 +30,7 @@ export const updateWorkAPI = async (id: number, data: UpdateWorkRequest) => {
 
 export const setWorkCategoryAPI = async (
   id: number,
-  data: { category_ids: number[] }
+  data: { categoryIds: number[] }
 ) => {
-  return await http.post(`/works/category/${id}`, data);
+  return await http.patch(`/works/category/${id}`, data);
 };

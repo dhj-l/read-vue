@@ -24,12 +24,17 @@
               {{ row.user?.username }}
             </template>
             <template #="{ row }" v-else-if="item.prop === 'categorys'">
-              <el-tag
-                v-for="cate in row.categorys"
-                :key="cate.id"
-                class="mr-2 mb-2"
-                >{{ cate.name }}</el-tag
-              >
+              <template v-if="row.categorys.length > 0">
+                <el-tag
+                  v-for="cate in row.categorys"
+                  :key="cate.id"
+                  class="mr-2 mb-2"
+                  >{{ cate.name }}</el-tag
+                >
+              </template>
+              <template v-else>
+                <el-tag type="info">暂无分类</el-tag>
+              </template>
             </template>
             <template #="{ row }" v-else-if="item.prop === 'status'">
               <el-tag :type="workStatusMap.get(row.status)?.type || 'info'">{{
@@ -65,7 +70,6 @@
       @current-change="(page: number)=>getWorkList({...worksSearchQuery, page})"
       @size-change="(pageSize: number)=>getWorkList({...worksSearchQuery, pageSize})"
     />
-    
   </div>
 </template>
 
