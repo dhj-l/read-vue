@@ -1,7 +1,8 @@
 import axios from "axios";
 import emitter from "@/utils/eventEmitter";
+import { API_BASE_URL_V1 } from "@/config/config";
 const http = axios.create({
-  baseURL: "http://127.0.0.1:3000/api/v1",
+  baseURL: API_BASE_URL_V1,
   timeout: 5000,
 });
 

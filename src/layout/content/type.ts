@@ -7,8 +7,8 @@ export interface CategoryForm {
   description: string;
 }
 
-export interface ButtonConfig {
+export interface ButtonConfig<T = Category> {
   label: string;
   props: any;
-  click: (row: Category) => void;
+  click: (row: T) => void;
 }

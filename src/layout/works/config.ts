@@ -1,5 +1,6 @@
 import { ElInput, ElSelect } from "element-plus";
 import type { WorksSearchConfigItem } from "./type";
+import type { TableColumns } from "../users/type";
 
 export const componentMap = new Map();
 componentMap.set("el-input", ElInput);
@@ -34,6 +35,31 @@ export enum WorkStatus {
    */
   REJECTED = 5,
 }
+export const workStatusMap = new Map();
+workStatusMap.set(WorkStatus.UNPUBLISHED, {
+  label: "未上架",
+  type: "info",
+});
+workStatusMap.set(WorkStatus.PUBLISHED, {
+  label: "已上架",
+  type: "success",
+});
+workStatusMap.set(WorkStatus.UNLISTED, {
+  label: "已下架",
+  type: "danger",
+});
+workStatusMap.set(WorkStatus.SERIAL, {
+  label: "连载中",
+  type: "warning",
+});
+workStatusMap.set(WorkStatus.ENDED, {
+  label: "已完结",
+  type: "primary",
+});
+workStatusMap.set(WorkStatus.REJECTED, {
+  label: "审核失败",
+  type: "danger",
+});
 export enum CountLevel {
   /**
    * 所有
@@ -115,5 +141,65 @@ export const countOptions = [
   {
     label: "120万字以上",
     value: CountLevel.LEVEL_5,
+  },
+];
+
+export const workListColumns: TableColumns[] = [
+  {
+    label: "ID",
+    prop: "id",
+    width: "80px",
+    align: "center",
+  },
+  {
+    label: "作品封面",
+    prop: "cover_url",
+    width: "120px",
+    align: "center",
+  },
+  {
+    label: "作品名称",
+    prop: "title",
+    align: "center",
+  },
+  {
+    label: "作品描述",
+    prop: "description",
+    align: "center",
+  },
+  {
+    label: "作者",
+    prop: "user",
+    align: "center",
+  },
+  {
+    label: "所属分类",
+    prop: "categorys",
+    align: "center",
+  },
+  {
+    label: "作品状态",
+    prop: "status",
+    align: "center",
+  },
+  {
+    label: "作品字数",
+    prop: "count",
+    align: "center",
+  },
+  {
+    label: "创建时间",
+    prop: "createTime",
+    align: "center",
+  },
+  {
+    label: "更新时间",
+    prop: "updateTime",
+    align: "center",
+  },
+  {
+    label: "操作",
+    prop: "actions",
+    align: "center",
   },
 ];

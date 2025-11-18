@@ -1,7 +1,11 @@
-import { ref, computed } from "vue";
+import { ref, computed, type ComponentInstance } from "vue";
 import { countOptions, statusOptions } from "./config";
 import type { WorksSearchConfigItem, WorksSearchQuery } from "./type";
 import { getUserListAPI } from "@/api/user/user";
+import { getCategoryListAPI } from "@/api/category/category";
+import type { ButtonConfig } from "../content/type";
+import type { Work } from "@/api/works/type";
+import type WorkList from "./components/workList.vue";
 
 export const useWorks = () => {
   const worksSearchQuery = ref<WorksSearchQuery>({
@@ -13,14 +17,23 @@ export const useWorks = () => {
     page: 1,
     pageSize: 10,
   });
-
+  const workListRef = ref<ComponentInstance<typeof WorkList>>();
+  const open = ref<boolean>(false);
   const userOptions = ref<
     {
       label: string;
       value: string;
     }[]
   >([]);
+  const categoryOptions = ref<
+    {
+      label: string;
+      value: number;
+    }[]
+  >([]);
 
+  const currentWork = ref<Work>({} as Work);
+  const drawer = ref<boolean>(false);
   const getUserList = async (value: string) => {
     const res = await getUserListAPI({
       username: value,
@@ -33,12 +46,43 @@ export const useWorks = () => {
     });
   };
 
+  const getCategoryList = async (value: string) => {
+    const res = await getCategoryListAPI({
+      name: value,
+    });
+    categoryOptions.value = res.data.categories.map((item) => {
+      return {
+        label: item.name,
+        value: item.id,
+      };
+    });
+  };
+
+  const searchWorks = () => {
+    workListRef.value?.getWorkList(worksSearchQuery.value);
+  };
+  const resetWorksSearchQuery = () => {
+    worksSearchQuery.value = {
+      title: "",
+      category_ids: [],
+      status: -1,
+      username: "",
+      count: -1,
+      page: 1,
+      pageSize: 10,
+    };
+    workListRef.value?.getWorkList(worksSearchQuery.value);
+  };
+  const handleSave = () => {
+    drawer.value = false;
+  };
   const worksSearchConfig = computed<WorksSearchConfigItem[]>(() => [
     {
       key: "title",
       component: "el-input",
       props: {
         placeholder: "请输入作品名称",
+        clearable: true,
         style: {
           width: "250px",
         },
@@ -77,6 +121,14 @@ export const useWorks = () => {
       component: "el-select",
       props: {
         placeholder: "请选择分类",
+        multiple: true,
+        filterable: true,
+        clearable: true,
+        remote: true,
+        remoteMethod: async (value: string) => {
+          await getCategoryList(value);
+        },
+        options: categoryOptions.value,
         style: {
           width: "250px",
         },
@@ -95,8 +147,37 @@ export const useWorks = () => {
     },
   ]);
 
+  const btnConfig = ref<ButtonConfig<Work>[]>([
+    {
+      label: "编辑",
+      props: { type: "primary", link: true },
+      click: (row: Work) => {
+        open.value = true;
+        currentWork.value = row;
+      },
+    },
+    {
+      label: "设置分类",
+      props: { type: "info", link: true },
+      click: (row: Work) => {
+        drawer.value = true;
+        currentWork.value = row;
+      },
+    },
+  ]);
+
   return {
     worksSearchConfig,
     worksSearchQuery,
+    btnConfig,
+    workListRef,
+    open,
+    searchWorks,
+    currentWork,
+    drawer,
+    resetWorksSearchQuery,
+    categoryOptions,
+    getCategoryList,
+    handleSave,
   };
 };
