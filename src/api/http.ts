@@ -32,7 +32,11 @@ http.interceptors.response.use(
       // 返回一个resolved的promise，阻止错误继续传播
       return Promise.resolve({ data: null });
     } else {
-      emitter.emit("requestError", response?.data?.message || "请求失败");
+      if (Array.isArray(response?.data?.message)) {
+        emitter.emit("requestError", response?.data?.message[0] || "请求失败");
+      } else {
+        emitter.emit("requestError", response?.data?.message || "请求失败");
+      }
       return Promise.reject(error);
     }
   }
