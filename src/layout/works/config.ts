@@ -188,6 +188,11 @@ export const workListColumns: TableColumns[] = [
     align: "center",
   },
   {
+    label: "阅读数量",
+    prop: "readCount",
+    align: "center",
+  },
+  {
     label: "创建时间",
     prop: "createTime",
     align: "center",

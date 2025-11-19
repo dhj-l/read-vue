@@ -4,7 +4,7 @@ import mitt from "mitt";
 type Events = {
   noAuth: void;
   requestError: string;
-  login: string;
+  login: void;
   message: {
     type: "success" | "error" | "warning" | "info";
     content: string;

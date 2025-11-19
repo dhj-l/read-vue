@@ -69,6 +69,16 @@ export const layoutRoutes: RouteRecordRaw[] = [
           requireAuth: true,
         },
       },
+      {
+        path: "chapters",
+        name: "Chapters",
+        component: () => import("@/layout/chapters/chapters.vue"),
+        meta: {
+          title: "章节管理",
+          icon: "",
+          requireAuth: true,
+        },
+      },
     ],
   },
 ];

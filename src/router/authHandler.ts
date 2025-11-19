@@ -8,6 +8,6 @@ emitter.on("noAuth", () => {
 });
 
 // 监听 login 事件
-emitter.on("login", (path?: string) => {
-  router.push(path || "/");
+emitter.on("login", () => {
+  router.push("/");
 });

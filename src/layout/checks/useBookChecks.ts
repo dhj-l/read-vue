@@ -6,10 +6,7 @@ import {
   getBookCheckDetailAPI,
   updateBookCheckAPI,
 } from "@/api/book-check/book-check";
-import type {
-  BookCheckItem,
-  BookCheckListParams,
-} from "@/api/book-check/type";
+import type { BookCheckItem, BookCheckListParams } from "@/api/book-check/type";
 import { getUserListAPI } from "@/api/user/user";
 import { getWorksListAPI } from "@/api/works/works";
 import type { ButtonConfig } from "@/layout/content/type";
@@ -120,7 +117,9 @@ export const useBookChecks = () => {
   const drawer = ref(false);
   const detail = ref<BookCheckItem | null>(null);
   const detailTitle = computed(() =>
-    detail.value?.work?.title ? `审核详情 - ${detail.value.work.title}` : "审核详情"
+    detail.value?.work?.title
+      ? `审核详情 - ${detail.value.work.title}`
+      : "审核详情"
   );
 
   const openDetail = async (row: BookCheckItem) => {
@@ -148,9 +147,16 @@ export const useBookChecks = () => {
         userOptions.value = [];
         return;
       }
-      const { data } = await getUserListAPI({ page: 1, pageSize: 10, username: keyword });
+      const { data } = await getUserListAPI({
+        page: 1,
+        pageSize: 10,
+        username: keyword,
+      });
       if (data) {
-        userOptions.value = (data.users ?? []).map((u) => ({ label: u.username, value: u.id }));
+        userOptions.value = (data.users ?? []).map((u) => ({
+          label: u.username,
+          value: u.id,
+        }));
       }
     } finally {
       remoteUsersLoading.value = false;
@@ -164,8 +170,18 @@ export const useBookChecks = () => {
         workOptions.value = [];
         return;
       }
-      const res = await getWorksListAPI({ page: 1, pageSize: 10, title: keyword, status: 0, username: "", count: 0, category_ids: [] });
-      workOptions.value = (res as any)?.data?.works?.map((w: any) => ({ label: w.title, value: w.id })) ?? [];
+      const res = await getWorksListAPI({
+        page: 1,
+        pageSize: 10,
+        title: keyword,
+        username: "",
+        category_ids: [],
+      });
+      workOptions.value =
+        (res as any)?.data?.works?.map((w: any) => ({
+          label: w.title,
+          value: w.id,
+        })) ?? [];
     } finally {
       remoteWorksLoading.value = false;
     }
