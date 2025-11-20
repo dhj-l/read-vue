@@ -75,7 +75,17 @@ export const layoutRoutes: RouteRecordRaw[] = [
         component: () => import("@/layout/chapters/chapters.vue"),
         meta: {
           title: "章节管理",
-          icon: "",
+          icon: "Book",
+          requireAuth: true,
+        },
+      },
+      {
+        path: "chapter-checks",
+        name: "ChapterChecks",
+        component: () => import("@/layout/checks/chapter-checks.vue"),
+        meta: {
+          title: "章节审核管理",
+          icon: "Edit",
           requireAuth: true,
         },
       },

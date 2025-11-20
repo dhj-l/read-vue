@@ -126,46 +126,23 @@
       />
     </div>
 
-    <el-drawer v-model="drawer" :title="detailTitle" :size="600">
-      <div class="p-4 space-y-4">
-        <div class="flex items-start space-x-4">
-          <el-image
-            :src="API_BASE_URL + (detail?.work?.cover_url || '')"
-            fit="cover"
-            style="width: 120px; height: 160px; border-radius: 6px"
-          />
-          <div class="flex-1">
-            <div class="text-lg font-medium">{{ detail?.work?.title }}</div>
-            <div class="text-gray-500 mt-1">
-              {{ detail?.work?.description }}
-            </div>
-            <div class="text-gray-400 mt-2">
-              字数：{{ detail?.work?.count }}
-            </div>
-          </div>
-        </div>
-        <el-descriptions :column="2" border>
-          <el-descriptions-item label="审核状态">{{
-            statusText(detail?.status ?? 0)
-          }}</el-descriptions-item>
-          <el-descriptions-item label="作品状态">{{
-            workStatusText(detail?.work?.status ?? 0)
-          }}</el-descriptions-item>
-          <el-descriptions-item label="提交时间">{{
-            formateTime(detail?.createTime ?? "")
-          }}</el-descriptions-item>
-          <el-descriptions-item label="更新时间">{{
-            formateTime(detail?.updateTime ?? "")
-          }}</el-descriptions-item>
-          <el-descriptions-item label="作者">{{
-            detail?.user?.username
-          }}</el-descriptions-item>
-          <el-descriptions-item label="邮箱">{{
-            detail?.user?.email
-          }}</el-descriptions-item>
-        </el-descriptions>
-      </div>
-    </el-drawer>
+    <CheckDetailDrawer
+      v-model="drawer"
+      :title="detailTitle"
+      :size="600"
+      :image-url="API_BASE_URL + (detail?.work?.cover_url || '')"
+      :heading="detail?.work?.title || ''"
+      :subheading="detail?.work?.description || ''"
+      :extra="`字数：${detail?.work?.count ?? 0}`"
+      :items="[
+        { label: '审核状态', value: statusText(detail?.status ?? 0) },
+        { label: '作品状态', value: workStatusText(detail?.work?.status ?? 0) },
+        { label: '提交时间', value: formateTime(detail?.createTime ?? '') },
+        { label: '更新时间', value: formateTime(detail?.updateTime ?? '') },
+        { label: '作者', value: detail?.user?.username ?? '' },
+        { label: '邮箱', value: detail?.user?.email ?? '' },
+      ]"
+    />
   </div>
 </template>
 
@@ -175,6 +152,7 @@ import { API_BASE_URL } from "@/config/config";
 import { formateTime } from "@/utils/formdate";
 import type { TableColumns } from "@/layout/users/type";
 import { useBookChecks } from "./useBookChecks";
+import CheckDetailDrawer from "./components/CheckDetailDrawer.vue";
 
 const {
   loading,
