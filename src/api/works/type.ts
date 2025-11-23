@@ -41,13 +41,6 @@ export interface WorksListResponse {
 }
 
 /**
- * 作品详情响应接口
- */
-export interface WorkDetailResponse {
-  work: Work;
-}
-
-/**
  * 创建/更新作品请求接口
  */
 export interface CreateWorkRequest {

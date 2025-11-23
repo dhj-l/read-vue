@@ -2,7 +2,7 @@
   <div class="h-full flex flex-col">
     <div class="flex-1">
       <el-table border :data="worksList">
-        <template v-for="item in workListColumns" :key="item.prop">
+        <template v-for="item in columns" :key="item.prop">
           <el-table-column v-bind="item">
             <template #="{ row }" v-if="item.prop === 'cover_url'">
               <el-image
@@ -44,6 +44,11 @@
             <template #="{ row }" v-else-if="item.prop.includes('Time')">
               {{ formateTime(row[item.prop]) }}
             </template>
+            <template #="{ row }" v-else-if="item.prop === 'description'">
+              <el-tooltip :content="row.description" placement="top">
+                <div class="w-full truncate">{{ row.description }}</div>
+              </el-tooltip>
+            </template>
             <template #="{ row }" v-else-if="item.prop === 'actions'">
               <el-button-group>
                 <el-button
@@ -51,7 +56,7 @@
                   :key="btn.label"
                   :type="btn.props.type"
                   :link="btn.props.link"
-                  @click="btn.click(row)"
+                  @click="btn.click && btn.click(row)"
                   >{{ btn.label }}</el-button
                 >
               </el-button-group>
@@ -79,18 +84,29 @@ import { getWorksListAPI } from "@/api/works/works";
 
 import { Picture as IconPicture } from "@element-plus/icons-vue";
 import type { WorksSearchQuery } from "../type";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import type { Work } from "@/api/works/type";
 import { API_BASE_URL } from "@/config/config";
 import { formateTime } from "@/utils/formdate";
 import type { ButtonConfig } from "@/layout/content/type";
 const props = withDefaults(
   defineProps<{
-    worksSearchQuery: WorksSearchQuery;
-    btnConfig: ButtonConfig<Work>[];
+    worksSearchQuery: Partial<WorksSearchQuery>;
+    btnConfig?: ButtonConfig<Work>[];
+    actions?: boolean;
   }>(),
-  {}
+  {
+    btnConfig: () => [],
+    actions: true,
+  }
 );
+const columns = computed(() => {
+  if (props.actions) {
+    return workListColumns;
+  } else {
+    return workListColumns.filter((item) => item.prop !== "actions");
+  }
+});
 const worksList = ref<Work[]>([]);
 const total = ref<number>(0);
 const getWorkList = async (params: Partial<WorksSearchQuery>) => {

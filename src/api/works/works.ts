@@ -1,10 +1,6 @@
 import type { WorksSearchQuery } from "@/layout/works/type";
 import http from "../http";
-import type {
-  UpdateWorkRequest,
-  WorkDetailResponse,
-  WorksListResponse,
-} from "./type";
+import type { UpdateWorkRequest, Work, WorksListResponse } from "./type";
 
 export const getWorksListAPI = async (params: Partial<WorksSearchQuery>) => {
   if (
@@ -14,7 +10,6 @@ export const getWorksListAPI = async (params: Partial<WorksSearchQuery>) => {
   ) {
     params.category_ids = params.category_ids.join(",");
   }
-  console.log(params);
 
   return await http.get<WorksListResponse>("/works", {
     params,
@@ -43,5 +38,5 @@ export const setWorkCategoryAPI = async (
  * 获取作品详情
  */
 export const getWorkDetailAPI = async (id: number) => {
-  return await http.get<WorkDetailResponse>(`/works/${id}`);
+  return await http.get<Work>(`/works/${id}`);
 };

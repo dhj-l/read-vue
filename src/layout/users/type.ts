@@ -8,6 +8,7 @@ export interface TableColumns {
   align?: "left" | "center" | "right";
   fixed?: "left" | "right";
   minWidth?: string | number;
+  props?: Record<string, any>;
 }
 
 export interface CheckRolesProps {

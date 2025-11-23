@@ -107,6 +107,18 @@
         <el-button @click="drawer = false">取消</el-button>
       </template>
     </el-drawer>
+    <!-- 展示分类下的书籍列表 -->
+    <el-dialog
+      v-model="open"
+      title="分类下的书籍列表"
+      width="80%"
+      :key="currentId"
+    >
+      <WorkList
+        :works-search-query="{ category_ids: [currentId as number] }"
+        :actions="false"
+      />
+    </el-dialog>
   </div>
 </template>
 
@@ -116,6 +128,7 @@ import { onMounted } from "vue";
 import { tableColumns } from "./config";
 import { useCategorys } from "./useCategorys";
 import { formateTime } from "@/utils/formdate";
+import WorkList from "../works/components/workList.vue";
 
 const {
   loading,
@@ -125,11 +138,13 @@ const {
   pageSize,
   total,
   categories,
+  open,
   drawer,
   formData,
   drawerTitle,
   rules,
   formRef,
+  currentId,
   getCategories,
   reset,
   handleAdd,
