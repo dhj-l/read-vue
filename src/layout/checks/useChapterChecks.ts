@@ -12,7 +12,7 @@ import { getChapterDetailAPI } from "@/api/chapter/chapter";
 
 interface ButtonConfigWithVisible<T = ChapterCheckItem>
   extends ButtonConfig<T> {
-  visible?: (row: T) => boolean;
+  visible?: (row?: T) => boolean;
 }
 
 export const useChapterChecks = () => {
@@ -104,8 +104,8 @@ export const useChapterChecks = () => {
     {
       label: "通过",
       props: { type: "success", link: true },
-      visible: (row) => row.status === 0,
-      click: (row) =>
+      visible: (row?: ChapterCheckItem) => !!row && row.status === 0,
+      click: (row: ChapterCheckItem) =>
         messageHandle({
           type: "warning",
           message: "确定通过该章节审核吗？",
@@ -115,8 +115,8 @@ export const useChapterChecks = () => {
     {
       label: "拒绝",
       props: { type: "danger", link: true },
-      visible: (row) => row.status === 0,
-      click: (row) =>
+      visible: (row?: ChapterCheckItem) => !!row && row.status === 0,
+      click: (row: ChapterCheckItem) =>
         messageHandle({
           type: "warning",
           message: "确定拒绝该章节审核吗？",

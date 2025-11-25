@@ -14,7 +14,7 @@ import { getWorksListAPI, getWorkDetailAPI } from "@/api/works/works";
 import { watch } from "vue";
 
 interface ButtonConfigWithVisible<T = ChapterItem> extends ButtonConfig<T> {
-  visible?: (row: T) => boolean;
+  visible?: (row?: T) => boolean;
 }
 
 export const useChapters = () => {

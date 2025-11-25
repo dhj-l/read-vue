@@ -58,7 +58,7 @@ const goDetail = (id: number) => {
   router.push({
     path: "/home/detail",
     query: {
-      id,
+      workId: id,
     },
   });
 };

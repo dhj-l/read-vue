@@ -6,21 +6,19 @@ import { useDetail } from "./useDetail";
 import { API_BASE_URL } from "@/config/config";
 import { workStatusMap } from "@/layout/works/config";
 import { formateCount, formateTime } from "@/utils/formdate";
-
-const {
-  workInfo,
-  getWorkInfo,
-  chapterList,
-  currentId,
-  getChapterList,
-  gotoReader,
-} = useDetail();
+import { useReadStore } from "@/stores/modules/read/read";
+import { storeToRefs } from "pinia";
+const { getChapterList } = useReadStore();
+const { chapterList } = storeToRefs(useReadStore());
+const { workInfo, getWorkInfo, currentId, gotoReader } = useDetail();
 
 onMounted(() => {
   getWorkInfo(currentId.value);
+
   getChapterList(currentId.value);
 });
 
+//TODO：后期需要删除
 interface AuthorInfo {
   name: string;
   avatar: string;
@@ -154,7 +152,7 @@ const statusType = computed(() =>
           >
             <span
               class="truncate text-[#333] opacity-80 text-base cursor-pointer hover:text-red-500"
-              >{{ ch.name }}</span
+              >{{ ch.title }}</span
             >
           </div>
         </div>

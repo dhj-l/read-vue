@@ -9,6 +9,7 @@ export interface ChapterItem {
   name: string;
   status: number;
   count: number;
+  content: string;
   work: ChapterWork;
   createTime: string;
   updateTime: string;
