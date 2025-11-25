@@ -24,4 +24,9 @@ export const homeRoutes: RouteRecordRaw[] = [
       },
     ],
   },
+  {
+    path: "/reader",
+    name: "Reader",
+    component: () => import("@/views/reader/reader.vue"),
+  },
 ];

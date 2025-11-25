@@ -9,6 +9,7 @@ type Events = {
     type: "success" | "error" | "warning" | "info";
     content: string;
   };
+  logout: void;
 };
 
 const emitter = mitt<Events>();

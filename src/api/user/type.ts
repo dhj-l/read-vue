@@ -1,3 +1,5 @@
+import type { Work } from "../works/type";
+
 export interface UserListParams {
   page: number;
   pageSize: number;
@@ -31,4 +33,9 @@ export interface UserListResponse {
   pageSize: number;
   total: number;
   users: UserItem[];
+}
+
+export interface UserInfo extends UserItem {
+  roles: RoleItem[];
+  works: Work[];
 }

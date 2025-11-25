@@ -28,6 +28,8 @@ export interface Work {
   categorys: Category[];
   status: number;
   cover_url: string;
+  chapterCount: number;
+  readCount: number;
   createTime: string;
   updateTime: string;
 }

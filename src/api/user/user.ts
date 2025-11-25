@@ -1,5 +1,5 @@
 import http from "../http";
-import type { UserListParams, UserListResponse } from "./type";
+import type { UserInfo, UserListParams, UserListResponse } from "./type";
 
 /**
  * 获取用户列表
@@ -39,4 +39,11 @@ export const unbanUserAPI = async (id: number) => {
  */
 export const assignRolesAPI = async (id: number, roles: number[]) => {
   return await http.post(`/user/role/${id}`, roles);
+};
+
+/**
+ * 获取个人信息
+ */
+export const getUserInfoAPI = async () => {
+  return await http.get<UserInfo>("/user/info");
 };

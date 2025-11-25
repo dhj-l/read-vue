@@ -7,7 +7,6 @@ export interface ChapterWork {
 export interface ChapterItem {
   id: number;
   name: string;
-  content: string;
   status: number;
   count: number;
   work: ChapterWork;
@@ -21,6 +20,7 @@ export interface ChapterListParams {
   name?: string;
   status?: number;
   workId?: number;
+  all?: number;
 }
 
 export interface ChapterListResponse {

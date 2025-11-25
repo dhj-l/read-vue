@@ -1,17 +1,24 @@
 <script setup lang="ts">
 import { EditPen } from "@element-plus/icons-vue";
-import { ref, computed, onMounted } from "vue";
+import { computed, onMounted } from "vue";
 import { useDetail } from "./useDetail";
-import { useRoute } from "vue-router";
+
 import { API_BASE_URL } from "@/config/config";
 import { workStatusMap } from "@/layout/works/config";
-import { formateTime } from "@/utils/formdate";
+import { formateCount, formateTime } from "@/utils/formdate";
 
-const { workInfo, getWorkInfo } = useDetail();
-const route = useRoute();
+const {
+  workInfo,
+  getWorkInfo,
+  chapterList,
+  currentId,
+  getChapterList,
+  gotoReader,
+} = useDetail();
 
 onMounted(() => {
-  getWorkInfo(Number(route.query.id));
+  getWorkInfo(currentId.value);
+  getChapterList(currentId.value);
 });
 
 interface AuthorInfo {
@@ -26,44 +33,6 @@ const author: AuthorInfo = {
   bio: "用心写出不一样的故事",
 };
 
-interface ChapterItem {
-  id: number;
-  title: string;
-}
-interface Volume {
-  title: string;
-  count: number;
-  chapters: ChapterItem[];
-}
-
-const volumes: Volume[] = [
-  {
-    title: "第一卷：戏中人",
-    count: 320,
-    chapters: Array.from({ length: 40 }).map((_, i) => ({
-      id: i + 1,
-      title: `第${i + 1}章 标题占位`,
-    })),
-  },
-  {
-    title: "第二卷：破局",
-    count: 280,
-    chapters: Array.from({ length: 40 }).map((_, i) => ({
-      id: i + 100,
-      title: `第${i + 1}章 标题占位`,
-    })),
-  },
-];
-
-const volumeIndex = ref<number>(0);
-const EMPTY_VOLUME: Volume = { title: "", count: 0, chapters: [] };
-const currentVolume = computed<Volume>(
-  () => volumes[volumeIndex.value] ?? EMPTY_VOLUME
-);
-const totalChapters = computed(() =>
-  volumes.reduce((acc, v) => acc + v.count, 0)
-);
-
 const statusLabel = computed(() =>
   workInfo.value ? workStatusMap.get(workInfo.value.status)?.label ?? "" : ""
 );
@@ -72,10 +41,6 @@ const statusType = computed(() =>
     ? workStatusMap.get(workInfo.value.status)?.type ?? "info"
     : "info"
 );
-const wordCount = computed(() => {
-  const c = Number(workInfo.value?.count ?? 0);
-  return (c / 10000).toFixed(1);
-});
 </script>
 
 <template>
@@ -113,8 +78,10 @@ const wordCount = computed(() => {
                 >
               </div>
               <div>
-                <span class="text-2xl text-[#333] mr-1">{{ wordCount }}</span>
-                <span class="text-[12px] opacity-40">万字</span>
+                <span class="text-2xl text-[#333] mr-1">{{
+                  formateCount(workInfo.count)
+                }}</span>
+                <span class="text-[12px] opacity-40">字</span>
               </div>
               <div>
                 <span class="text-sm"
@@ -122,7 +89,12 @@ const wordCount = computed(() => {
                 >
               </div>
               <div>
-                <el-button class="w-[150px]" round type="success"
+                <el-button
+                  v-if="chapterList.length > 0"
+                  class="w-[150px]"
+                  round
+                  type="success"
+                  @click="gotoReader(chapterList[0]!.id)"
                   >开始阅读</el-button
                 >
                 <el-button class="w-[150px]" round>加入书架</el-button>
@@ -146,7 +118,7 @@ const wordCount = computed(() => {
                 作者
               </el-tag>
               <span class="text-xl font-semibold text-gray-900">{{
-                author.name
+                workInfo?.user.username || "无名氏"
               }}</span>
             </div>
             <div class="mt-2 text-sm text-gray-500">{{ author.bio }}</div>
@@ -161,25 +133,28 @@ const wordCount = computed(() => {
       <section class="px-8 py-6 border-b border-[#e5e5e5]">
         <h2 class="text-xl font-semibold mb-4">作品简介</h2>
         <p class="text-gray-700 leading-7">
-          赤色流星划过天际后，人类文明陷入停滞。从那天起，人们再也无法制造一枚火箭、一颗核弹、一架飞机、一台汽车……近代科学推倒而成的文明金字塔轰然坍塌，而这时，远不止此。灰色的世界蔓延在高楼间，侵蚀着随后的鬼魅倒影，就要把世界一点点拖入无尽的深渊。在这个时代，人人跋涉生存；在这个时代，人类以书为最后。某一天，有人从一戏子之双目魔迹之上，红啸似血，时笑时哭，时代的骨骸在他身后缓缓打开，他跃开灰幕，...
+          {{ workInfo?.description }}
         </p>
       </section>
 
       <!-- 目录 -->
       <section class="px-8 py-6">
         <div class="flex items-center justify-between">
-          <h2 class="text-xl font-semibold">目录 · {{ totalChapters }}章</h2>
+          <h2 class="text-xl font-semibold">
+            目录 · {{ workInfo?.chapterCount }}章
+          </h2>
         </div>
 
         <div class="mt-6 flex flex-wrap">
           <div
-            v-for="ch in currentVolume.chapters"
+            v-for="ch in chapterList"
             :key="ch.id"
             class="flex items-center space-x-2 w-[33%] h-[20px] mt-5"
+            @click="gotoReader(ch.id)"
           >
             <span
               class="truncate text-[#333] opacity-80 text-base cursor-pointer hover:text-red-500"
-              >{{ ch.title }}</span
+              >{{ ch.name }}</span
             >
           </div>
         </div>
