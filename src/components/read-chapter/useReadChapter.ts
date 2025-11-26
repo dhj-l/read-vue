@@ -29,7 +29,7 @@ export const useReadChapter = (
       label: "上一章",
       props: {
         class:
-          "w-[160px] h-[44px] rounded-[22px] mr-20 text-[#b3b3b3] bg-[#b3b3b31a] cursor-pointer hover:bg-[#b3b3b333]",
+          "w-[160px] h-[44px] rounded-[22px] mr-[80px] text-[#b3b3b3] bg-[#b3b3b31a] cursor-pointer hover:bg-[#b3b3b333]",
       },
       click: () => {
         emits("change", props.chapterList[currentIndex.value - 1]!.id);

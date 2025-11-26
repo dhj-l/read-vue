@@ -1,18 +1,18 @@
 <template>
-  <div class="w-[960px] min-h-full bg-[#262626] px-20">
+  <div class="w-[960px] min-h-full bg-[#262626] px-[80px]">
     <header
-      class="flex justify-between items-center h-[80px] text-[#b3b3b3] border-b border-[#b3b3b329]"
+      class="sticky top-0 bg-[#262626] flex justify-between items-center h-[80px] text-[#b3b3b3] border-b border-[#b3b3b329]"
     >
       <!-- 标题 -->
       <div
-        class="text-lg flex min-w-[120px] h-full items-center cursor-pointer hover:text-white"
+        class="text-[18px] flex min-w-[120px] h-full items-center cursor-pointer hover:text-white"
       >
-        <ArrowLeft class="w-5 h-5 mr-3" />
+        <ArrowLeft class="w-[20px] h-[20px] mr-[12px]" />
 
         <span>{{ chapter.name }}</span>
       </div>
       <!-- 用户信息展示 -->
-      <div class="text-sm w-1/2 flex justify-end">
+      <div class="text-[14px] w-1/2 flex justify-end">
         <el-dropdown class="cursor-pointer">
           <span class="text-[#b3b3b3] flex items-center">
             {{ userInfo.username }}
@@ -40,16 +40,24 @@
       <div class="text-xl font-medium text-[#b3b3b3]">
         <h1>{{ chapter.name }}</h1>
         <p class="text-sm text-[#b3b3b366] mt-2">
-          <span class="mr-5">本章字数: {{ chapter.count }}字</span>
+          <span class="mr-[20px]">本章字数: {{ chapter.count }}字</span>
           <span>更新时间: {{ formateTime(chapter.updateTime) }}</span>
         </p>
       </div>
       <!-- 内容部分 -->
-      <div class="mt-6 space-y-4 leading-8 text-[#b3b3b3]">
-        <p v-for="(seg, idx) in segments" :key="idx">{{ seg }}</p>
+      <div class="mt-[24px] space-y-[16px] text-[#b3b3b3]">
+        <p
+          v-for="(seg, idx) in segments"
+          :key="idx"
+          class="indent-[2em] leading-8"
+        >
+          {{ seg }}
+        </p>
       </div>
     </div>
-    <footer class="my-20 flex items-center w-full justify-center">
+    <footer
+      class="my-[80px] text-[16px] flex items-center w-full justify-center"
+    >
       <template v-for="item in btnConfig" :key="item.label">
         <button v-if="item.visible?.()" v-bind="item.props" @click="item.click">
           {{ item.label }}

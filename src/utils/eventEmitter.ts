@@ -10,7 +10,16 @@ type Events = {
     content: string;
   };
   logout: void;
+  changeFontSize: number;
 };
 
 const emitter = mitt<Events>();
+
+emitter.on("changeFontSize", (val) => {
+  const html = document.querySelector("html");
+  console.log(html);
+  if (html) {
+    html.style.fontSize = `${val}px`;
+  }
+});
 export default emitter;
