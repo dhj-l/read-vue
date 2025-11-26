@@ -1,13 +1,20 @@
 import type { ButtonConfig } from "@/layout/content/type";
-import { useReadStore } from "@/stores/modules/read/read";
 import { useUserStore } from "@/stores/modules/user/user";
-import { storeToRefs } from "pinia";
+import type { ReadChapterEmits, ReadChapterProps } from "./type";
+import { computed, watch } from "vue";
+import { useRoute } from "vue-router";
 
 export const useReadChapter = (
-  emits: (event: string, ...args: any[]) => void
+  props: ReadChapterProps,
+  emits: ReadChapterEmits
 ) => {
   const { logout } = useUserStore();
-  const { currentIndex, chapterList } = storeToRefs(useReadStore());
+  const route = useRoute();
+  const currentIndex = computed(() => {
+    const chapterId = route.query.chapterId;
+    return props.chapterList.findIndex((item) => item.id === Number(chapterId));
+  });
+
   const dropMenuConfigs: ButtonConfig<any>[] = [
     {
       label: "退出登录",
@@ -25,10 +32,9 @@ export const useReadChapter = (
           "w-[160px] h-[44px] rounded-[22px] mr-20 text-[#b3b3b3] bg-[#b3b3b31a] cursor-pointer hover:bg-[#b3b3b333]",
       },
       click: () => {
-        emits("change", chapterList.value[currentIndex.value - 1]?.id);
+        emits("change", props.chapterList[currentIndex.value - 1]!.id);
       },
       visible: () => {
-        //如果当前章节不是第一章节
         return currentIndex.value > 0;
       },
     },
@@ -39,17 +45,15 @@ export const useReadChapter = (
           "w-[160px] h-[44px] rounded-[22px] text-[#b3b3b3] bg-[#fa672599] cursor-pointer hover:bg-[#fa6725]",
       },
       click: () => {
-        emits("change", chapterList.value[currentIndex.value + 1]?.id);
+        emits("change", props.chapterList[currentIndex.value + 1]!.id);
       },
       visible: () => {
         //如果当前章节不是最后一章
-        return (
-          currentIndex.value >= 0 &&
-          currentIndex.value < chapterList.value.length - 1
-        );
+        return currentIndex.value < props.chapterList.length - 1;
       },
     },
   ];
+
   return {
     dropMenuConfigs,
     btnConfig,

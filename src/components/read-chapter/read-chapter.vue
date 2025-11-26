@@ -6,7 +6,6 @@
       <!-- 标题 -->
       <div
         class="text-lg flex min-w-[120px] h-full items-center cursor-pointer hover:text-white"
-        @click="backToDetail"
       >
         <ArrowLeft class="w-5 h-5 mr-3" />
 
@@ -69,34 +68,20 @@ import { storeToRefs } from "pinia";
 import { formateTime } from "@/utils/formdate";
 import { computed } from "vue";
 import { segmentText } from "@/utils/text-segment";
-import { useRouter } from "vue-router";
+import type { ReadChapterEmits, ReadChapterProps } from "./type";
 
 //章节阅读器
-const props = withDefaults(
-  defineProps<{
-    chapter: ChapterItem;
-  }>(),
-  {
-    chapter: () => ({} as ChapterItem),
-  }
-);
-const emits = defineEmits(["change" as string]);
-const { dropMenuConfigs, btnConfig } = useReadChapter(emits);
+const props = withDefaults(defineProps<ReadChapterProps>(), {
+  chapter: () => ({} as ChapterItem),
+  chapterList: () => [] as ChapterItem[],
+});
+const emits = defineEmits<ReadChapterEmits>();
+const { dropMenuConfigs, btnConfig } = useReadChapter(props, emits);
 const { userInfo } = storeToRefs(useUserStore());
 
 const segments = computed<string[]>(() =>
   segmentText(props.chapter.content ?? "", { mode: "sentence" })
 );
-
-const router = useRouter();
-const backToDetail = () => {
-  const wid = props.chapter.work?.id;
-  if (wid) {
-    router.push({ path: "/home/detail", query: { workId: wid } });
-  } else {
-    router.back();
-  }
-};
 </script>
 
 <style scoped></style>

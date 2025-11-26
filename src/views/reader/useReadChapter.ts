@@ -1,36 +1,32 @@
 import { getChapterDetailAPI } from "@/api/chapter/chapter";
 import type { ChapterItem } from "@/api/chapter/type";
-import { useReadStore } from "@/stores/modules/read/read";
-import { computed, onMounted, onUnmounted, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { storeToRefs } from "pinia";
-import { getItem, setItem } from "@/utils/storage";
+import { getChapterListMethod } from "@/api/public-api-method/chapter";
 import { getRecordAPI } from "@/api/record/record";
+import type { RecordItem } from "@/api/record/type";
+import { computed, onMounted, ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
 export const useReadChapter = () => {
   const chapter = ref<ChapterItem>({} as ChapterItem);
   const route = useRoute();
   const router = useRouter();
-  const readStore = useReadStore();
-  const { getChapterMap, setChapterMap, clearChapterMap, getChapterList } =
-    readStore;
-  const { chapterList } = storeToRefs(readStore);
-  const chapterId = computed(() => Number(route.query.chapterId));
-  const workId = computed(() => Number(route.query.workId));
+  const chapterId = computed(() => {
+    return Number(route.query.chapterId);
+  });
+  const workId = computed(() => {
+    return Number(route.query.workId);
+  });
+  const chapterList = ref<ChapterItem[]>([]);
+
+  const record = ref<RecordItem>({} as RecordItem);
+
   const getChapterDetail = async (id: number) => {
-    if (getChapterMap(id)) {
-      chapter.value = getChapterMap(id) as ChapterItem;
-    } else {
-      const res = await getChapterDetailAPI(id);
-      if (res.data) {
-        chapter.value = res.data;
-        setChapterMap(id, res.data);
-      }
+    const res = await getChapterDetailAPI(id);
+    if (res.data) {
+      chapter.value = res.data;
     }
   };
   const changeChapter = async (id: number) => {
-    if (!id || !Number.isFinite(id)) return;
-    await getChapterDetail(id);
     router.push({
       path: "/reader",
       query: {
@@ -38,46 +34,44 @@ export const useReadChapter = () => {
         workId: route.query.workId,
       },
     });
-    const wId = workId.value;
-    if (Number.isFinite(wId)) {
-      setItem(`lastRead_${wId}`, id);
+    getChapterDetail(id);
+  };
+
+  const getRecord = async (workId: number) => {
+    const res = await getRecordAPI(workId);
+    if (res.data) {
+      record.value = res.data;
     }
   };
-  onMounted(async () => {
-    const wId = workId.value;
-    const cId = chapterId.value;
-    if (chapterList.value.length === 0 && Number.isFinite(wId)) {
-      await getChapterList(wId);
+  const getChapterList = async (id: number) => {
+    const res = await getChapterListMethod(id);
+    if (res.data) {
+      chapterList.value = res.data.chapters;
     }
-    let serverLastId: number | undefined;
-    if (Number.isFinite(wId)) {
-      try {
-        const res = await getRecordAPI(wId);
-        serverLastId = (res as any)?.data?.chapter?.id;
-      } catch {}
+  };
+
+  const initReader = async () => {
+    //第一步： 根据workId获取书籍阅读记录
+    await getRecord(workId.value);
+    //第二步：如果返回的章节id与当前章节id不一致，则跳转到该章节
+    if (record.value.chapter.id !== chapterId.value) {
+      changeChapter(record.value.chapter.id);
+    } else {
+      //第三步：如果返回的章节id与当前章节id一致，则获取当前章节详情
+      getChapterDetail(chapterId.value);
     }
-    const localLastId = Number.isFinite(wId)
-      ? getLastReadChapterIdLocal(wId)
-      : undefined;
-    const effectiveId =
-      Number.isFinite(cId) && cId > 0
-        ? cId
-        : localLastId ?? chapterList.value[0]?.id;
-    const finalId = serverLastId ?? effectiveId;
-    if (finalId) {
-      await getChapterDetail(finalId);
-    }
+    //第四步: 防止以外情况，在这里再次获取章节列表
+    await getChapterList(workId.value);
+  };
+
+  onMounted(() => {
+    initReader();
   });
-  onUnmounted(() => {
-    clearChapterMap();
-  });
+
   return {
     chapter,
+    chapterList,
     getChapterDetail,
     changeChapter,
   };
-};
-const getLastReadChapterIdLocal = (wid: number): number | undefined => {
-  const val = getItem<number>(`lastRead_${wid}`);
-  return typeof val === "number" && Number.isFinite(val) ? val : undefined;
 };

@@ -6,11 +6,14 @@ import { useDetail } from "./useDetail";
 import { API_BASE_URL } from "@/config/config";
 import { workStatusMap } from "@/layout/works/config";
 import { formateCount, formateTime } from "@/utils/formdate";
-import { useReadStore } from "@/stores/modules/read/read";
-import { storeToRefs } from "pinia";
-const { getChapterList } = useReadStore();
-const { chapterList } = storeToRefs(useReadStore());
-const { workInfo, getWorkInfo, currentId, gotoReader } = useDetail();
+const {
+  workInfo,
+  chapterList,
+  currentId,
+  gotoReader,
+  getChapterList,
+  getWorkInfo,
+} = useDetail();
 
 onMounted(() => {
   getWorkInfo(currentId.value);
@@ -152,7 +155,7 @@ const statusType = computed(() =>
           >
             <span
               class="truncate text-[#333] opacity-80 text-base cursor-pointer hover:text-red-500"
-              >{{ ch.title }}</span
+              >{{ ch.name }}</span
             >
           </div>
         </div>
