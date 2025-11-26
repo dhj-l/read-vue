@@ -5,6 +5,7 @@ import { computed, onMounted, onUnmounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { getItem, setItem } from "@/utils/storage";
+import { getRecordAPI } from "@/api/record/record";
 
 export const useReadChapter = () => {
   const chapter = ref<ChapterItem>({} as ChapterItem);
@@ -48,6 +49,13 @@ export const useReadChapter = () => {
     if (chapterList.value.length === 0 && Number.isFinite(wId)) {
       await getChapterList(wId);
     }
+    let serverLastId: number | undefined;
+    if (Number.isFinite(wId)) {
+      try {
+        const res = await getRecordAPI(wId);
+        serverLastId = (res as any)?.data?.chapter?.id;
+      } catch {}
+    }
     const localLastId = Number.isFinite(wId)
       ? getLastReadChapterIdLocal(wId)
       : undefined;
@@ -55,8 +63,9 @@ export const useReadChapter = () => {
       Number.isFinite(cId) && cId > 0
         ? cId
         : localLastId ?? chapterList.value[0]?.id;
-    if (effectiveId) {
-      await getChapterDetail(effectiveId);
+    const finalId = serverLastId ?? effectiveId;
+    if (finalId) {
+      await getChapterDetail(finalId);
     }
   });
   onUnmounted(() => {
