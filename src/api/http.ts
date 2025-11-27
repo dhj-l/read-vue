@@ -1,6 +1,7 @@
 import axios from "axios";
 import emitter from "@/utils/eventEmitter";
 import { API_BASE_URL_V1 } from "@/config/config";
+import { getItem } from "@/utils/storage";
 const http = axios.create({
   baseURL: API_BASE_URL_V1,
   timeout: 5000,
@@ -8,7 +9,7 @@ const http = axios.create({
 
 http.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
+    const token = getItem("token", false);
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
     }

@@ -14,7 +14,7 @@ import { getWorksListAPI, getWorkDetailAPI } from "@/api/works/works";
 import { watch } from "vue";
 
 interface ButtonConfigWithVisible<T = ChapterItem> extends ButtonConfig<T> {
-  visible?: (row: T) => boolean;
+  visible?: (row?: T) => boolean;
 }
 
 export const useChapters = () => {
@@ -50,8 +50,12 @@ export const useChapters = () => {
     ],
   });
 
-  const drawerTitle = computed(() => (currentChapterId.value ? "编辑章节" : "新增章节"));
-  const detailTitle = computed(() => (detail.value?.name ? `章节详情 - ${detail.value.name}` : "章节详情"));
+  const drawerTitle = computed(() =>
+    currentChapterId.value ? "编辑章节" : "新增章节"
+  );
+  const detailTitle = computed(() =>
+    detail.value?.name ? `章节详情 - ${detail.value.name}` : "章节详情"
+  );
 
   const statusText = (s?: number) => {
     if (s === 0) return "待审核";
@@ -111,7 +115,10 @@ export const useChapters = () => {
   const handleSubmit = async () => {
     await formRef.value?.validate();
     if (!currentChapterId.value) {
-      emitter.emit("message", { type: "warning", content: "请选择要编辑的章节" });
+      emitter.emit("message", {
+        type: "warning",
+        content: "请选择要编辑的章节",
+      });
       return;
     }
     await updateChapterAPI(currentChapterId.value, formData.value);
@@ -166,10 +173,11 @@ export const useChapters = () => {
         username: "",
         category_ids: [],
       });
-      userWorksOptions.value = (res as any)?.data?.works?.map((w: any) => ({
-        label: w.title,
-        value: w.id,
-      })) ?? [];
+      userWorksOptions.value =
+        (res as any)?.data?.works?.map((w: any) => ({
+          label: w.title,
+          value: w.id,
+        })) ?? [];
     } finally {
       worksLoading.value = false;
     }
@@ -181,9 +189,12 @@ export const useChapters = () => {
     if (exists) return;
     try {
       const res = await getWorkDetailAPI(id);
-      const work = (res as any)?.data?.work ?? (res as any)?.data;
+      const work = res.data;
       if (work?.id && work?.title) {
-        userWorksOptions.value = [{ label: work.title, value: work.id }, ...userWorksOptions.value];
+        userWorksOptions.value = [
+          { label: work.title, value: work.id },
+          ...userWorksOptions.value,
+        ];
       }
     } catch {}
   };

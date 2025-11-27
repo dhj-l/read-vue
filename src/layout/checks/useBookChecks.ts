@@ -12,7 +12,7 @@ import { getWorksListAPI } from "@/api/works/works";
 import type { ButtonConfig } from "@/layout/content/type";
 
 interface ButtonConfigWithVisible<T = BookCheckItem> extends ButtonConfig<T> {
-  visible?: (row: T) => boolean;
+  visible?: (row?: T) => boolean;
 }
 
 export const useBookChecks = () => {
@@ -93,7 +93,7 @@ export const useBookChecks = () => {
   const btnApprove: ButtonConfigWithVisible<BookCheckItem> = {
     label: "通过",
     props: { link: true, type: "success" },
-    visible: (row: BookCheckItem) => row.status === 0,
+    visible: (row?: BookCheckItem) => !!row && row.status === 0,
     click: (row: BookCheckItem) =>
       messageHandle({
         type: "warning",
@@ -105,7 +105,7 @@ export const useBookChecks = () => {
   const btnReject: ButtonConfigWithVisible<BookCheckItem> = {
     label: "拒绝",
     props: { link: true, type: "danger" },
-    visible: (row: BookCheckItem) => row.status === 0,
+    visible: (row?: BookCheckItem) => !!row && row.status === 0,
     click: (row: BookCheckItem) =>
       messageHandle({
         type: "warning",

@@ -11,4 +11,5 @@ export interface ButtonConfig<T = Category> {
   label: string;
   props: any;
   click: (row: T) => void;
+  visible?: (row?: T) => boolean;
 }

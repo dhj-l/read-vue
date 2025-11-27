@@ -15,6 +15,7 @@ export const useCategorys = () => {
   // 响应式数据
   const loading = ref(false);
   const formRef = ref<ComponentInstance<typeof ElForm>>();
+  const currentId = ref<number | null>(null);
   // 操作按钮配置
   const btnConfig = ref<ButtonConfig[]>([
     {
@@ -45,6 +46,7 @@ export const useCategorys = () => {
   const total = ref(0);
   const categories = ref<Category[]>([]);
   const drawer = ref(false);
+  const open = ref(false);
   const formData = ref<CategoryForm>({
     name: "",
     description: "",
@@ -115,10 +117,8 @@ export const useCategorys = () => {
     };
   };
   const handleDetail = (row: Category) => {
-    emitter.emit("message", {
-      type: "info",
-      content: `分类名称：${row.name}，分类描述：${row.description}，后续开发`,
-    });
+    currentId.value = row.id;
+    open.value = true;
   };
   // 编辑分类
   const handleEdit = (row: Category) => {
@@ -175,6 +175,8 @@ export const useCategorys = () => {
     drawerTitle,
     rules,
     formRef,
+    open,
+    currentId,
     getCategories,
     reset,
     handleAdd,

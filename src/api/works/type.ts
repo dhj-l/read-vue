@@ -28,6 +28,8 @@ export interface Work {
   categorys: Category[];
   status: number;
   cover_url: string;
+  chapterCount: number;
+  readCount: number;
   createTime: string;
   updateTime: string;
 }
@@ -38,13 +40,6 @@ export interface Work {
 export interface WorksListResponse {
   works: Work[];
   total: number;
-}
-
-/**
- * 作品详情响应接口
- */
-export interface WorkDetailResponse {
-  work: Work;
 }
 
 /**
