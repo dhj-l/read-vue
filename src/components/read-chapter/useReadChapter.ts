@@ -29,7 +29,7 @@ export const useReadChapter = (
       label: "上一章",
       props: {
         class:
-          "w-[160px] h-[44px] rounded-[22px] mr-[80px] text-[#b3b3b3] bg-[#b3b3b31a] cursor-pointer hover:bg-[#b3b3b333]",
+          "w-[160px] h-[44px] rounded-[22px] mr-[80px] cursor-pointer text-gray-700 bg-gray-100 hover:bg-gray-200 dark:text-[#b3b3b3] dark:bg-[#b3b3b31a] dark:hover:bg-[#b3b3b333]",
       },
       click: () => {
         emits("change", props.chapterList[currentIndex.value - 1]!.id);
@@ -42,7 +42,7 @@ export const useReadChapter = (
       label: "下一章",
       props: {
         class:
-          "w-[160px] h-[44px] rounded-[22px] text-[#b3b3b3] bg-[#fa672599] cursor-pointer hover:bg-[#fa6725]",
+          "w-[160px] h-[44px] rounded-[22px] cursor-pointer text-white bg-orange-500 hover:bg-orange-600 dark:text-[#b3b3b3] dark:bg-[#fa672599] dark:hover:bg-[#fa6725]",
       },
       click: () => {
         emits("change", props.chapterList[currentIndex.value + 1]!.id);

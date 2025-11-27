@@ -1,7 +1,7 @@
 <template>
   <div class="w-[56px] flex flex-col">
     <div
-      class="w-full h-[56px] rounded-lg bg-[#262626] my-[8px]"
+      class="w-full h-[56px] rounded-lg my-[8px] bg-white border border-gray-200 shadow-sm dark:bg-[#262626] dark:border-transparent dark:shadow-none"
       v-for="(item, index) in componentList"
       :key="index"
     >

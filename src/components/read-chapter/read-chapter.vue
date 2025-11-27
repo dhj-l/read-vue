@@ -1,11 +1,13 @@
 <template>
-  <div class="w-[960px] min-h-full bg-[#262626] px-[80px]">
+  <div
+    class="w-[960px] min-h-full px-[80px] bg-white dark:bg-[#262626] transform transition-all duration-300"
+  >
     <header
-      class="sticky top-0 bg-[#262626] flex justify-between items-center h-[80px] text-[#b3b3b3] border-b border-[#b3b3b329]"
+      class="sticky top-0 bg-white dark:bg-[#262626] flex justify-between items-center h-[80px] text-gray-800 dark:text-[#b3b3b3] border-b border-gray-200 dark:border-[#b3b3b329] transform transition-all duration-300"
     >
       <!-- 标题 -->
       <div
-        class="text-[18px] flex min-w-[120px] h-full items-center cursor-pointer hover:text-white"
+        class="text-[18px] flex min-w-[120px] h-full items-center cursor-pointer text-gray-800 hover:text-gray-900 dark:text-[#b3b3b3] dark:hover:text-white"
       >
         <ArrowLeft class="w-[20px] h-[20px] mr-[12px]" />
 
@@ -14,8 +16,8 @@
       <!-- 用户信息展示 -->
       <div class="text-[14px] w-1/2 flex justify-end">
         <el-dropdown class="cursor-pointer">
-          <span class="text-[#b3b3b3] flex items-center">
-            {{ userInfo.username }}
+          <span class="flex items-center text-gray-700 dark:text-[#b3b3b3]">
+            {{ userInfo?.username }}
             <el-icon class="el-icon--right">
               <arrow-down />
             </el-icon>
@@ -37,15 +39,15 @@
     <!-- 内容部分 -->
     <div class="mt-10">
       <!-- 标题 -->
-      <div class="text-xl font-medium text-[#b3b3b3]">
+      <div class="text-xl font-medium text-gray-800 dark:text-[#b3b3b3]">
         <h1>{{ chapter.name }}</h1>
-        <p class="text-sm text-[#b3b3b366] mt-2">
+        <p class="text-sm mt-2 text-gray-500 dark:text-[#b3b3b366]">
           <span class="mr-[20px]">本章字数: {{ chapter.count }}字</span>
           <span>更新时间: {{ formateTime(chapter.updateTime) }}</span>
         </p>
       </div>
       <!-- 内容部分 -->
-      <div class="mt-[24px] space-y-[16px] text-[#b3b3b3]">
+      <div class="mt-[24px] space-y-[16px] text-gray-800 dark:text-[#b3b3b3]">
         <p
           v-for="(seg, idx) in segments"
           :key="idx"
@@ -56,7 +58,7 @@
       </div>
     </div>
     <footer
-      class="my-[80px] text-[16px] flex items-center w-full justify-center"
+      class="my-[80px] text-[16px] flex items-center w-full justify-center text-gray-700 dark:text-[#b3b3b3]"
     >
       <template v-for="item in btnConfig" :key="item.label">
         <button v-if="item.visible?.()" v-bind="item.props" @click="item.click">
@@ -90,6 +92,8 @@ const { userInfo } = storeToRefs(useUserStore());
 const segments = computed<string[]>(() =>
   segmentText(props.chapter.content ?? "", { mode: "sentence" })
 );
+
+// dark mode handled via tailwind dark: variants inherited from reader container
 </script>
 
 <style scoped></style>

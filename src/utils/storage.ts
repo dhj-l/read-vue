@@ -5,12 +5,19 @@ export const setItem = <T>(key: string, value: T) => {
     localStorage.setItem(key, value);
   }
 };
-export const getItem = <T>(key: string, parse: boolean = true): T => {
-  if (parse) {
-    const item = localStorage.getItem(key);
-    return item ? JSON.parse(item) : (item as T);
+export const getItem = <T>(
+  key: string,
+  parse: boolean = true
+): T | undefined => {
+  const item = localStorage.getItem(key);
+  if (item) {
+    if (parse) {
+      return JSON.parse(item) as T;
+    } else {
+      return item as T;
+    }
   } else {
-    return localStorage.getItem(key) as T;
+    return undefined;
   }
 };
 

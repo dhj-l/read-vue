@@ -1,9 +1,9 @@
 <template>
   <div class="w-full h-full">
-    <el-popover effect="dark" placement="left">
+    <el-popover :effect="readStatus" placement="left">
       <template #reference>
         <div
-          class="text-[18px] cursor-pointer text-[#b3b3b3] w-full h-full flex flex-col items-center justify-center"
+          class="text-[18px] transition-all duration-300 cursor-pointer w-full h-full flex flex-col items-center justify-center text-gray-600 dark:text-[#b3b3b3]"
         >
           <p>A</p>
           <p class="text-[12px]">字号</p>
@@ -27,7 +27,7 @@ import emitter from "@/utils/eventEmitter";
 import { storeToRefs } from "pinia";
 import { onMounted, ref } from "vue";
 const { setFontSize, init } = useReadConfigStore();
-const { fontSize } = storeToRefs(useReadConfigStore());
+const { fontSize, readStatus } = storeToRefs(useReadConfigStore());
 const value = ref(fontSize.value || 16);
 
 const handleChange = (val: number) => {

@@ -1,5 +1,8 @@
 <template>
-  <div class="w-full min-h-full bg-[#1a1a1a] flex justify-center px-[120px]">
+  <div
+    class="w-full min-h-full flex justify-center px-[120px] bg-gray-50 dark:bg-[#1a1a1a] transform transition-all duration-300"
+    :class="{ dark: readStatus === 'dark' }"
+  >
     <ReadChapter
       :chapter="chapter"
       @change="changeChapter"
@@ -15,8 +18,14 @@
 import ReadAside from "@/components/read-aside/read-aside.vue";
 import ReadChapter from "@/components/read-chapter/read-chapter.vue";
 import { useReadChapter } from "@/views/reader/useReadChapter";
+import { useReadConfigStore } from "@/stores/modules/read-config/read-config";
+import { storeToRefs } from "pinia";
+// no need for computed classes; use tailwind dark variant
 
 const { chapter, chapterList, changeChapter } = useReadChapter();
+
+const { readStatus } = storeToRefs(useReadConfigStore());
+// toggling 'dark' class via binding enables dark: utilities
 </script>
 
 <style scoped></style>

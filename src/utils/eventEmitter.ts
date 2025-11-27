@@ -11,6 +11,10 @@ type Events = {
   };
   logout: void;
   changeFontSize: number;
+  setHtmlAttr: {
+    key: string;
+    value: string;
+  };
 };
 
 const emitter = mitt<Events>();
@@ -19,6 +23,13 @@ emitter.on("changeFontSize", (val) => {
   const html = document.querySelector("html");
   if (html) {
     html.style.fontSize = `${val}px`;
+  }
+});
+
+emitter.on("setHtmlAttr", (val) => {
+  const html = document.querySelector("html");
+  if (html) {
+    html.setAttribute(val.key, val.value);
   }
 });
 export default emitter;

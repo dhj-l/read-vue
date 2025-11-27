@@ -16,5 +16,6 @@ emitter.on("login", () => {
 emitter.on("logout", () => {
   removeItem("token");
   removeItem("userInfo");
+  emitter.emit("changeFontSize", 16);
   router.push("/login");
 });

@@ -20,7 +20,6 @@ export const useUserStore = defineStore("user", () => {
   };
   const logout = () => {
     emitter.emit("logout");
-    console.log(userInfo.value);
   };
   const getUserInfo = async () => {
     const res = await getUserInfoAPI();
