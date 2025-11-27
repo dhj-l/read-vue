@@ -12,6 +12,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     BookCard: typeof import('./src/components/book-card/book-card.vue')['default']
+    DarkMode: typeof import('./src/components/read-aside/components/dark-mode/dark-mode.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElBadge: typeof import('element-plus/es')['ElBadge']

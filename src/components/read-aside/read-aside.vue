@@ -11,8 +11,9 @@
 </template>
 
 <script setup lang="ts">
+import DarkMode from "./components/dark-mode/dark-mode.vue";
 import FontSize from "./components/fontSize/font-size.vue";
-const componentList = [FontSize];
+const componentList = [FontSize, DarkMode];
 </script>
 
 <style scoped></style>

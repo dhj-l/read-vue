@@ -7,10 +7,7 @@ export const useReadConfigStore = defineStore("read-config", () => {
   /**
    * 阅读状态
    */
-  const readStatus = computed(() => {
-    const status = getItem("status");
-    return status || "dark";
-  });
+  const readStatus = ref<"dark" | "light">(getItem("status") || "dark");
   /**
    * 字体大小
    */

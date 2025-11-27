@@ -6,9 +6,12 @@ export const setItem = <T>(key: string, value: T) => {
   }
 };
 export const getItem = <T>(key: string, parse: boolean = true): T => {
-  return parse
-    ? JSON.parse(localStorage.getItem(key) || "{}")
-    : ((localStorage.getItem(key) || "") as T);
+  if (parse) {
+    const item = localStorage.getItem(key);
+    return item ? JSON.parse(item) : (item as T);
+  } else {
+    return localStorage.getItem(key) as T;
+  }
 };
 
 export const removeItem = (key: string) => {
