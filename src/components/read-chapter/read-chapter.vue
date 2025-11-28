@@ -57,6 +57,7 @@
         </p>
       </div>
     </div>
+    <ListenBook :segments="segments" />
     <footer
       class="my-[80px] text-[16px] flex items-center w-full justify-center text-gray-700 dark:text-[#b3b3b3]"
     >
@@ -79,6 +80,7 @@ import { formateTime } from "@/utils/formdate";
 import { computed } from "vue";
 import { segmentText } from "@/utils/text-segment";
 import type { ReadChapterEmits, ReadChapterProps } from "./type";
+import ListenBook from "@/components/ListenBook.vue";
 
 //章节阅读器
 const props = withDefaults(defineProps<ReadChapterProps>(), {

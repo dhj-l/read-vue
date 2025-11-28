@@ -65,6 +65,7 @@ declare module 'vue' {
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     ElUpload: typeof import('element-plus/es')['ElUpload']
     FontSize: typeof import('./src/components/read-aside/components/fontSize/font-size.vue')['default']
+    ListenBook: typeof import('./src/components/ListenBook.vue')['default']
     ReadAside: typeof import('./src/components/read-aside/read-aside.vue')['default']
     ReadChapter: typeof import('./src/components/read-chapter/read-chapter.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
