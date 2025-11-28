@@ -69,6 +69,7 @@ declare module 'vue' {
     ReadChapter: typeof import('./src/components/read-chapter/read-chapter.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    ToolBar: typeof import('./src/components/read-aside/components/tool-bar/tool-bar.vue')['default']
     UseReadChapter: typeof import('./src/components/read-chapter/useReadChapter.vue')['default']
   }
   export interface GlobalDirectives {

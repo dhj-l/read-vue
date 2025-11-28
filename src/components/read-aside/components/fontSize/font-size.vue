@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-full">
-    <el-popover :effect="readStatus" placement="left">
+    <el-popover placement="right" trigger="click">
       <template #reference>
         <div
           class="text-[18px] transition-all duration-300 cursor-pointer w-full h-full flex flex-col items-center justify-center text-gray-600 dark:text-[#b3b3b3]"

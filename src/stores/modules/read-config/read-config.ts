@@ -17,6 +17,7 @@ export const useReadConfigStore = defineStore("read-config", () => {
     setItem("status", status);
     readStatus.value = status;
     emitter.emit("setHtmlAttr", { key: "data-theme", value: status });
+    emitter.emit("setHtmlAttr", { key: "class", value: status });
   };
   const setFontSize = (size: number) => {
     setItem("fontSize", size);
@@ -27,6 +28,7 @@ export const useReadConfigStore = defineStore("read-config", () => {
   const init = () => {
     emitter.emit("changeFontSize", fontSize.value);
     emitter.emit("setHtmlAttr", { key: "data-theme", value: readStatus.value });
+    emitter.emit("setHtmlAttr", { key: "class", value: readStatus.value });
   };
 
   return {

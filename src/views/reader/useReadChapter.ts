@@ -3,7 +3,7 @@ import type { ChapterItem } from "@/api/chapter/type";
 import { getChapterListMethod } from "@/api/public-api-method/chapter";
 import { getRecordAPI } from "@/api/record/record";
 import type { RecordItem } from "@/api/record/type";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 export const useReadChapter = () => {
@@ -34,7 +34,6 @@ export const useReadChapter = () => {
         workId: route.query.workId,
       },
     });
-    getChapterDetail(id);
   };
 
   const getRecord = async (workId: number) => {
@@ -63,6 +62,14 @@ export const useReadChapter = () => {
     //第四步: 防止以外情况，在这里再次获取章节列表
     await getChapterList(workId.value);
   };
+
+  watch(chapterId, async () => {
+    await getChapterDetail(chapterId.value);
+  });
+
+  watch(workId, async () => {
+    await initReader();
+  });
 
   onMounted(() => {
     initReader();

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-[960px] min-h-full px-[80px] bg-white dark:bg-[#262626] transform transition-all duration-300"
+    class="read w-[960px] min-h-full px-[80px] bg-white dark:bg-[#262626] transform transition-all duration-300"
   >
     <header
       class="sticky top-0 bg-white dark:bg-[#262626] flex justify-between items-center h-[80px] text-gray-800 dark:text-[#b3b3b3] border-b border-gray-200 dark:border-[#b3b3b329] transform transition-all duration-300"
