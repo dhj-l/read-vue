@@ -1,10 +1,40 @@
 <template>
-  <div class="mt-6 p-4 border rounded-lg bg-white dark:bg-[#262626]">
-    <div class="flex items-center flex-wrap gap-3">
+  <div
+    class="mt-[24px] p-[16px] bg-white dark:bg-[#262626] border border-gray-200 dark:border-[#b3b3b329] rounded-[8px] shadow-sm transform transition-all duration-300"
+  >
+    <div class="flex items-center justify-between">
+      <div
+        class="flex items-center text-sm text-gray-700 dark:text-[#b3b3b3] text-[16px]"
+      >
+        <span
+          class="w-[8px] h-[8px] rounded-[4px] mr-[8px]"
+          :class="playing ? 'bg-green-500' : 'bg-gray-300'"
+        ></span>
+        <span>{{ playing ? "播放中" : "已暂停" }}</span>
+      </div>
+      <div class="text-[12px] text-gray-500 dark:text-[#b3b3b366]">
+        {{ currentIndex + 1 }}/{{ segments.length }}
+      </div>
+    </div>
+
+    <div
+      class="mt-[12px] h-[4px] w-full bg-gray-200 dark:bg-[#b3b3b329] rounded-[4px]"
+    >
+      <div
+        class="h-full bg-orange-500 rounded-[4px]"
+        :style="{ width: progressPercent + '%' }"
+      ></div>
+    </div>
+
+    <div
+      class="mt-[12px] flex items-center flex-wrap gap-3 text-gray-800 dark:text-[#b3b3b3]"
+    >
       <el-select
         v-model="selectedVoice"
         placeholder="选择发音人"
-        style="width: 160px"
+        size="small"
+        class="w-[160px]"
+        :teleported="false"
       >
         <el-option
           v-for="opt in voiceOptions"
@@ -14,35 +44,56 @@
         />
       </el-select>
       <el-checkbox v-model="disableCache">禁用缓存</el-checkbox>
-      <el-select v-model="selectedAue" placeholder="编码" style="width: 120px">
+      <el-select
+        v-model="selectedAue"
+        placeholder="编码"
+        size="small"
+        class="w-[120px]"
+        :teleported="false"
+      >
         <el-option label="MP3" value="lame" />
-        <el-option label="RAW16k" value="raw" />
       </el-select>
-      <el-button type="primary" :disabled="playing || loading" @click="play()"
-        >播放</el-button
-      >
-      <el-button :disabled="!playing" @click="pause()">暂停</el-button>
-      <el-button :disabled="playing || !audioReady" @click="resume()"
-        >继续</el-button
-      >
-      <el-button @click="stop()">停止</el-button>
-      <el-button :disabled="loading || currentIndex <= 0" @click="prev()"
-        >上一段</el-button
-      >
-      <el-button
-        :disabled="loading || currentIndex >= segments.length - 1"
-        @click="next()"
-        >下一段</el-button
-      >
-      <span class="text-sm text-gray-600 dark:text-[#b3b3b3]"
-        >{{ currentIndex + 1 }}/{{ segments.length }}</span
-      >
+      <el-button-group>
+        <el-button
+          type="primary"
+          size="small"
+          round
+          :disabled="playing || loading"
+          @click="play()"
+          >播放</el-button
+        >
+        <el-button size="small" round :disabled="!playing" @click="pause()"
+          >暂停</el-button
+        >
+        <el-button
+          size="small"
+          round
+          :disabled="playing || !audioReady"
+          @click="resume()"
+          >继续</el-button
+        >
+        <el-button size="small" round @click="stop()">停止</el-button>
+        <el-button
+          size="small"
+          round
+          :disabled="loading || currentIndex <= 0"
+          @click="prev()"
+          >上一段</el-button
+        >
+        <el-button
+          size="small"
+          round
+          :disabled="loading || currentIndex >= segments.length - 1"
+          @click="next()"
+          >下一段</el-button
+        >
+      </el-button-group>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, computed, onMounted, onUnmounted, watch } from "vue";
 import { API_BASE_URL } from "@/config/config";
 import { io, type Socket } from "socket.io-client";
 import emitter from "@/utils/eventEmitter";
@@ -58,7 +109,7 @@ const props = withDefaults(defineProps<ListenBookProps>(), {
   aue: "lame",
 });
 
-const segments = computed(() => props.segments ?? []);
+const segments = ref<string[]>([]);
 const currentIndex = ref(0);
 const playing = ref(false);
 const loading = ref(false);
@@ -68,15 +119,28 @@ let socket: Socket | null = null;
 
 type VoiceOption = { label: string; value: string };
 const voiceOptions: VoiceOption[] = [
-  { label: "讯飞小燕", value: "x4_xiaoyan" },
-  { label: "讯飞小雯", value: "x4_yezi" },
-  { label: "讯飞许久", value: "aisjiuxu" },
-  { label: "讯飞小倩", value: "aisjinger" },
-  { label: "讯飞小宝", value: "aisbabyxu" },
+  { label: "小燕", value: "x4_xiaoyan" },
+  { label: "小雯", value: "x4_yezi" },
+  { label: "许久", value: "aisjiuxu" },
+  { label: "小倩", value: "aisjinger" },
+  { label: "小宝", value: "aisbabyxu" },
 ];
 const selectedVoice = ref<string>(props.voice ?? "x4_xiaoyan");
 const selectedAue = ref<"lame" | "raw">(props.aue ?? "lame");
 const disableCache = ref(false);
+watch(
+  () => props.segments,
+  (newVal) => {
+    segments.value = newVal;
+    if (playing.value) {
+      currentIndex.value = 0;
+      setTimeout(() => {
+        playSegment(currentIndex.value);
+      }, 0);
+    }
+  },
+  { immediate: true }
+);
 
 const connect = () => {
   socket = io(`${API_BASE_URL}/ws`, { transports: ["websocket"] });
@@ -86,7 +150,10 @@ const requestTts = async (
   text: string
 ): Promise<{ audioBase64: string; mime: string }> => {
   return await new Promise((resolve, reject) => {
-    if (!socket) return reject(new Error("未连接"));
+    if (!socket) {
+      emitter.emit("requestError", "未连接");
+      return reject(new Error("未连接"));
+    }
     socket.emit(
       "tts:request",
       {
@@ -103,9 +170,9 @@ const requestTts = async (
         voice?: string;
       }) => {
         if (res?.ok && res.audioBase64 && res.mime) {
-          console.log("服务端实际发音人:", res.voice);
           resolve({ audioBase64: res.audioBase64, mime: res.mime });
         } else {
+          emitter.emit("requestError", res?.error ?? "合成失败");
           reject(new Error(res?.error ?? "合成失败"));
         }
       }
@@ -119,10 +186,11 @@ const playSegment = async (idx: number) => {
   loading.value = true;
   try {
     const { audioBase64, mime } = await requestTts(seg);
-
+    emitter.emit("setIdxIndex", idx);
     audioEl.value?.pause();
     audioEl.value = new Audio(`data:${mime};base64,${audioBase64}`);
     audioEl.value.addEventListener("ended", onEnded);
+
     await audioEl.value.play();
     audioReady.value = true;
     playing.value = true;
@@ -136,15 +204,21 @@ const onEnded = () => {
     currentIndex.value += 1;
     playSegment(currentIndex.value);
   } else {
-    playing.value = false;
+    let play = {
+      play: false,
+    };
+    emitter.emit("nextChapter", play);
+    playing.value = play.play;
   }
 };
 
 const play = () => {
+  if (!segments.value.length) return;
   currentIndex.value = Math.max(
     0,
     Math.min(currentIndex.value, segments.value.length - 1)
   );
+
   playSegment(currentIndex.value);
 };
 const pause = () => {
@@ -172,6 +246,12 @@ const next = () => {
   currentIndex.value += 1;
   playSegment(currentIndex.value);
 };
+
+const progressPercent = computed(() => {
+  const total = segments.value.length;
+  if (!total) return 0;
+  return Math.round(((currentIndex.value + 1) / total) * 100);
+});
 
 onMounted(connect);
 onUnmounted(() => {

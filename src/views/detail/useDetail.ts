@@ -19,13 +19,14 @@ export const useDetail = () => {
     workInfo.value = res.data;
   };
 
-  const gotoReader = (chapterId: number) => {
+  const gotoReader = (chapterId: number, chapterType?: string) => {
     // 打开新标签页
     const route = router.resolve({
       path: "/reader",
       query: {
         chapterId,
         workId: currentId.value,
+        chapterType: chapterType || "start",
       },
     });
     window.open(route.href, "_blank");

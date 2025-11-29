@@ -15,6 +15,10 @@ type Events = {
     key: string;
     value: string;
   };
+  setIdxIndex: number;
+  nextChapter: {
+    play: boolean;
+  };
 };
 
 const emitter = mitt<Events>();

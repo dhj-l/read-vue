@@ -3,6 +3,7 @@ import type { ChapterItem } from "@/api/chapter/type";
 import { getChapterListMethod } from "@/api/public-api-method/chapter";
 import { getRecordAPI } from "@/api/record/record";
 import type { RecordItem } from "@/api/record/type";
+import { segmentText } from "@/utils/text-segment";
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
@@ -16,9 +17,16 @@ export const useReadChapter = () => {
   const workId = computed(() => {
     return Number(route.query.workId);
   });
+  const chapterType = computed(() => {
+    return (route.query.chapterType as string) || "start";
+  });
   const chapterList = ref<ChapterItem[]>([]);
 
   const record = ref<RecordItem>({} as RecordItem);
+
+  const segments = computed<string[]>(() =>
+    segmentText(chapter.value.content ?? "", { mode: "sentence" })
+  );
 
   const getChapterDetail = async (id: number) => {
     const res = await getChapterDetailAPI(id);
@@ -32,6 +40,7 @@ export const useReadChapter = () => {
       query: {
         chapterId: id,
         workId: route.query.workId,
+        chapterType: chapterType.value,
       },
     });
   };
@@ -50,13 +59,17 @@ export const useReadChapter = () => {
   };
 
   const initReader = async () => {
-    //第一步： 根据workId获取书籍阅读记录
-    await getRecord(workId.value);
-    //第二步：如果返回的章节id与当前章节id不一致，则跳转到该章节
-    if (record.value.chapter.id !== chapterId.value) {
-      changeChapter(record.value.chapter.id);
+    if (chapterType.value !== "chapter") {
+      //第一步： 根据workId获取书籍阅读记录
+      await getRecord(workId.value);
+      //第二步：如果返回的章节id与当前章节id不一致，并且类型为chapter，则跳转到该章节
+      if (record.value.chapter.id !== chapterId.value) {
+        changeChapter(record.value.chapter.id);
+      } else {
+        //第三步：如果返回的章节id与当前章节id一致，则获取当前章节详情
+        getChapterDetail(chapterId.value);
+      }
     } else {
-      //第三步：如果返回的章节id与当前章节id一致，则获取当前章节详情
       getChapterDetail(chapterId.value);
     }
     //第四步: 防止以外情况，在这里再次获取章节列表
@@ -78,6 +91,7 @@ export const useReadChapter = () => {
   return {
     chapter,
     chapterList,
+    segments,
     getChapterDetail,
     changeChapter,
   };

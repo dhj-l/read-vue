@@ -52,12 +52,14 @@
           v-for="(seg, idx) in segments"
           :key="idx"
           class="indent-[2em] leading-8"
+          :class="{
+            'bg-[#f5f5f5] dark:bg-[#333333] text-orange-400 ': idx === idxIndex,
+          }"
         >
           {{ seg }}
         </p>
       </div>
     </div>
-    <ListenBook :segments="segments" />
     <footer
       class="my-[80px] text-[16px] flex items-center w-full justify-center text-gray-700 dark:text-[#b3b3b3]"
     >
@@ -77,23 +79,18 @@ import { useReadChapter } from "./useReadChapter";
 import { useUserStore } from "@/stores/modules/user/user";
 import { storeToRefs } from "pinia";
 import { formateTime } from "@/utils/formdate";
-import { computed } from "vue";
-import { segmentText } from "@/utils/text-segment";
 import type { ReadChapterEmits, ReadChapterProps } from "./type";
-import ListenBook from "@/components/ListenBook.vue";
 
 //章节阅读器
 const props = withDefaults(defineProps<ReadChapterProps>(), {
   chapter: () => ({} as ChapterItem),
   chapterList: () => [] as ChapterItem[],
+  segments: () => [] as string[],
 });
-const emits = defineEmits<ReadChapterEmits>();
-const { dropMenuConfigs, btnConfig } = useReadChapter(props, emits);
-const { userInfo } = storeToRefs(useUserStore());
 
-const segments = computed<string[]>(() =>
-  segmentText(props.chapter.content ?? "", { mode: "sentence" })
-);
+const emits = defineEmits<ReadChapterEmits>();
+const { dropMenuConfigs, btnConfig, idxIndex } = useReadChapter(props, emits);
+const { userInfo } = storeToRefs(useUserStore());
 
 // dark mode handled via tailwind dark: variants inherited from reader container
 </script>

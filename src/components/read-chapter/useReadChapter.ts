@@ -1,8 +1,9 @@
 import type { ButtonConfig } from "@/layout/content/type";
 import { useUserStore } from "@/stores/modules/user/user";
 import type { ReadChapterEmits, ReadChapterProps } from "./type";
-import { computed, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { useRoute } from "vue-router";
+import emitter from "@/utils/eventEmitter";
 
 export const useReadChapter = (
   props: ReadChapterProps,
@@ -14,6 +15,7 @@ export const useReadChapter = (
     const chapterId = route.query.chapterId;
     return props.chapterList.findIndex((item) => item.id === Number(chapterId));
   });
+  const idxIndex = ref(-1);
 
   const dropMenuConfigs: ButtonConfig<any>[] = [
     {
@@ -33,6 +35,7 @@ export const useReadChapter = (
       },
       click: () => {
         emits("change", props.chapterList[currentIndex.value - 1]!.id);
+        emitter.emit("setIdxIndex", -1);
       },
       visible: () => {
         return currentIndex.value > 0;
@@ -46,6 +49,7 @@ export const useReadChapter = (
       },
       click: () => {
         emits("change", props.chapterList[currentIndex.value + 1]!.id);
+        emitter.emit("setIdxIndex", -1);
       },
       visible: () => {
         //如果当前章节不是最后一章
@@ -53,9 +57,20 @@ export const useReadChapter = (
       },
     },
   ];
-
+  emitter.on("nextChapter", (play) => {
+    if (currentIndex.value < props.chapterList.length - 1) {
+      emits("change", props.chapterList[currentIndex.value + 1]!.id);
+      play.play = true;
+    } else {
+      play.play = false;
+    }
+  });
+  emitter.on("setIdxIndex", (val) => {
+    idxIndex.value = val;
+  });
   return {
     dropMenuConfigs,
     btnConfig,
+    idxIndex,
   };
 };

@@ -151,7 +151,7 @@ const statusType = computed(() =>
             v-for="ch in chapterList"
             :key="ch.id"
             class="flex items-center space-x-2 w-[33%] h-[20px] mt-5"
-            @click="gotoReader(ch.id)"
+            @click="gotoReader(ch.id,'chapter')"
           >
             <span
               class="truncate text-[#333] opacity-80 text-base cursor-pointer hover:text-red-500"
