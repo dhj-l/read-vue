@@ -22,6 +22,16 @@ export const homeRoutes: RouteRecordRaw[] = [
         name: "HomeDetail",
         component: () => import("@/views/detail/detail.vue"),
       },
+      {
+        path: "/home/library",
+        name: "HomeLibrary",
+        component: () => import("@/views/library/library.vue"),
+      },
+      {
+        path: "/home/shelf",
+        name: "HomeShelf",
+        component: () => import("@/views/shelf/shelf.vue"),
+      },
     ],
   },
   {

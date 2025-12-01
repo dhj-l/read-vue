@@ -6,6 +6,12 @@ export interface WorksSearchConfigItem {
   props?: any;
 }
 
+export enum SortOrder {
+  NEW = "new",
+  HOT = "hot",
+  COUNT = "count",
+}
+
 export interface WorksSearchQuery {
   title: string;
   category_ids: number[] | string;
@@ -14,6 +20,7 @@ export interface WorksSearchQuery {
   count: number;
   page: number;
   pageSize: number;
+  order: SortOrder;
 }
 
 export interface CheckCategoriesProps {

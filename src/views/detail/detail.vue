@@ -10,6 +10,9 @@ const {
   workInfo,
   chapterList,
   currentId,
+  bookStatusText,
+  btnDisabled,
+  addToShelfHandler,
   gotoReader,
   getChapterList,
   getWorkInfo,
@@ -98,7 +101,13 @@ const statusType = computed(() =>
                   @click="gotoReader(chapterList[0]!.id)"
                   >开始阅读</el-button
                 >
-                <el-button class="w-[150px]" round>加入书架</el-button>
+                <el-button
+                  @click="addToShelfHandler"
+                  class="w-[150px]"
+                  :disabled="btnDisabled"
+                  round
+                  >{{ bookStatusText }}</el-button
+                >
               </div>
             </div>
           </template>
@@ -151,7 +160,7 @@ const statusType = computed(() =>
             v-for="ch in chapterList"
             :key="ch.id"
             class="flex items-center space-x-2 w-[33%] h-[20px] mt-5"
-            @click="gotoReader(ch.id,'chapter')"
+            @click="gotoReader(ch.id, 'chapter')"
           >
             <span
               class="truncate text-[#333] opacity-80 text-base cursor-pointer hover:text-red-500"

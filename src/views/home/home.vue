@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-dvh flex flex-col">
-    <Header class="h-[80px]" v-bind="headerProps" />
+    <Header class="h-20" v-bind="headerProps" />
     <div class="flex-1 bg-[#f5f5f5]">
       <RouterView />
     </div>
@@ -12,7 +12,8 @@
 import Header from "./header/header.vue";
 import Footer from "./footer/footer.vue";
 import { useRoute } from "vue-router";
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
+import { useBookShelfStore } from "@/stores/modules/book-shelf/book-shelf";
 const route = useRoute();
 const headerProps = computed(() => {
   if (route.path === "/home") {
@@ -25,6 +26,13 @@ const headerProps = computed(() => {
       bgColor: "bg-[#f6f6f6]",
     };
   }
+});
+const { getBookShelfList } = useBookShelfStore();
+onMounted(() => {
+  getBookShelfList({
+    page: 1,
+    pageSize: 10,
+  });
 });
 </script>
 

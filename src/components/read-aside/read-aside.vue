@@ -15,11 +15,12 @@ import DarkMode from "./components/dark-mode/dark-mode.vue";
 import FontSize from "./components/fontSize/font-size.vue";
 import ListenBook from "./components/listen-book/listen-book.vue";
 import ToolBar from "./components/tool-bar/tool-bar.vue";
+import AddBook from "./components/add-book/add-book.vue";
 
 defineProps<{
   segments: string[];
 }>();
-const componentList = [ListenBook, FontSize, DarkMode, ToolBar];
+const componentList = [ListenBook, FontSize, DarkMode, ToolBar, AddBook];
 </script>
 
 <style scoped></style>

@@ -6,7 +6,7 @@
       <!-- 左侧 Logo + 站点名 -->
       <div class="flex items-center">
         <div class="w-8 h-8 rounded-md bg-orange-500 mr-3"></div>
-        <div class="text-base font-medium">番茄小说网</div>
+        <div class="text-base font-medium whitespace-nowrap">番茄小说网</div>
       </div>
 
       <!-- 中部导航 -->
@@ -21,7 +21,7 @@
               'text-sm',
               activeKey === item.key ? 'text-black font-bold' : 'text-gray-700',
             ]"
-            class="hover:border-b hover:border-black transition-all cursor-pointer"
+            class="whitespace-nowrap hover:border-b hover:border-black transition-all cursor-pointer"
           >
             {{ item.label }}
           </button>

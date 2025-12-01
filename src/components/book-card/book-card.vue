@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-80 h-36 flex items-center justify-between shadow-md rounded-lg p-2 hover:shadow-lg transition-shadow duration-300 bg-white"
+    class="w-80 h-36 flex items-center justify-between shadow-sm rounded-lg p-2 hover:shadow-lg transition-shadow duration-300 bg-white"
   >
     <div
       class="w-[100px] h-full rounded-lg mr-4 cursor-pointer overflow-hidden"
