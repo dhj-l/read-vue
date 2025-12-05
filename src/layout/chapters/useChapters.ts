@@ -58,6 +58,7 @@ export const useChapters = () => {
   );
 
   const statusText = (s?: number) => {
+    if (s === -1) return "未发布";
     if (s === 0) return "待审核";
     if (s === 1) return "已上架";
     if (s === 2) return "已下架";
@@ -65,6 +66,7 @@ export const useChapters = () => {
   };
 
   const statusTagType = (s?: number) => {
+    if (s === -1) return "danger";
     if (s === 0) return "info";
     if (s === 1) return "success";
     if (s === 2) return "warning";

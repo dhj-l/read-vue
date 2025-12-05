@@ -1,6 +1,7 @@
 <template>
   <div
-    class="w-full bg-white border rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow duration-300 overflow-hidden border-[#e5e5e5]"
+    class="w-full bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow duration-300 overflow-hidden"
+    :class="{ 'border border-[#e5e5e5]': border, 'shadow-md': shadow }"
   >
     <div class="flex flex-col md:flex-row">
       <!-- 封面图片 -->
@@ -89,8 +90,13 @@ import { useRouter } from "vue-router";
 
 export interface BookCardDetailProps {
   work: Work;
+  border: boolean;
+  shadow: boolean;
 }
-const props = defineProps<BookCardDetailProps>();
+const props = withDefaults(defineProps<BookCardDetailProps>(), {
+  border: true,
+  shadow: true,
+});
 const router = useRouter();
 
 const bookStatus = computed(() => {

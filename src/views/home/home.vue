@@ -1,7 +1,7 @@
 <template>
   <div class="w-full h-dvh flex flex-col">
     <Header class="h-20" v-bind="headerProps" />
-    <div class="flex-1 bg-[#f5f5f5]">
+    <div class="flex-1 flex justify-center bg-[#f5f5f5]">
       <RouterView />
     </div>
     <Footer class="h-[348px]" />
@@ -24,9 +24,12 @@ const headerProps = computed(() => {
     return {
       absolute: false,
       bgColor: "bg-[#f6f6f6]",
+      showSearch: route.name !== "search",
     };
   }
 });
+console.log(headerProps.value);
+
 const { getBookShelfList } = useBookShelfStore();
 onMounted(() => {
   getBookShelfList({

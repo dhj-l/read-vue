@@ -20,7 +20,7 @@ export interface WorksSearchQuery {
   count: number;
   page: number;
   pageSize: number;
-  order: SortOrder;
+  order?: SortOrder;
 }
 
 export interface CheckCategoriesProps {

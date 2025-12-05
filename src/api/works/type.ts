@@ -48,7 +48,7 @@ export interface WorksListResponse {
 export interface CreateWorkRequest {
   title: string;
   description: string;
-  category_ids: number[];
+  category_ids: number[] | string;
   status: number;
   cover_url?: string;
 }
@@ -58,4 +58,9 @@ export interface UpdateWorkRequest {
   description?: string;
   status?: number;
   cover_url?: string;
+}
+
+export interface FindAllByUserParams {
+  page: number;
+  pageSize: number;
 }

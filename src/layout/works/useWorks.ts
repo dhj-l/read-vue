@@ -1,6 +1,6 @@
 import { ref, computed, type ComponentInstance } from "vue";
 import { countOptions, statusOptions } from "./config";
-import type { WorksSearchConfigItem, WorksSearchQuery } from "./type";
+import { SortOrder, type WorksSearchConfigItem, type WorksSearchQuery } from "./type";
 import { getUserListAPI } from "@/api/user/user";
 import { getCategoryListAPI } from "@/api/category/category";
 import type { ButtonConfig } from "../content/type";
