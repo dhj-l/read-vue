@@ -16,6 +16,7 @@ declare module 'vue' {
     BookCard: typeof import('./src/components/book-card/book-card.vue')['default']
     BookCardDetail: typeof import('./src/components/book-card-detail/book-card-detail.vue')['default']
     BookList: typeof import('./src/components/book-list/book-list.vue')['default']
+    Chat: typeof import('./src/components/chat/chat.vue')['default']
     DarkMode: typeof import('./src/components/read-aside/components/dark-mode/dark-mode.vue')['default']
     Editor: typeof import('./src/components/editor/editor.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']

@@ -37,7 +37,8 @@
                     v-for="item in btnConfig"
                     :key="item.label"
                     v-bind="item.props"
-                    >编辑</el-button
+                    @click="item.click(row)"
+                    >{{ item.label }}</el-button
                   >
                 </div>
               </template>
@@ -72,13 +73,15 @@ import { getChapterListAPI } from "@/api/chapter/chapter";
 import type { ChapterItem } from "@/api/chapter/type";
 import type { ButtonConfig } from "@/layout/content/type";
 import Back from "@/components/back/back.vue";
+import emitter from "@/utils/eventEmitter";
 const { statusTagType, statusText } = useChapters();
 const route = useRoute();
 const router = useRouter();
 const page = ref(1);
 const pageSize = ref(10);
 const total = ref(0);
-const workId = computed(() => Number(route.query.workId));
+const workId = computed(() => Number(route.query.workId) || 0);
+
 const chapterList = ref<ChapterItem[]>([]);
 const loading = ref(false);
 const hidePagination = computed(() => total.value <= pageSize.value);
@@ -87,6 +90,10 @@ const handlePageChange = (newPage: number) => {
 };
 const getChapterList = async () => {
   if (!workId.value) {
+    emitter.emit("message", {
+      type: "error",
+      content: "请先选择作品",
+    });
     return;
   }
   loading.value = true;
@@ -104,6 +111,16 @@ const getChapterList = async () => {
   }
 };
 
+const handleEdit = (chapterId: number) => {
+  router.push({
+    path: "/editor",
+    query: {
+      workId: workId.value,
+      chapterId: chapterId,
+    },
+  });
+};
+
 const btnConfig: ButtonConfig<ChapterItem>[] = [
   {
     label: "编辑",
@@ -112,7 +129,7 @@ const btnConfig: ButtonConfig<ChapterItem>[] = [
       type: "primary",
     },
     click: (row) => {
-      console.log(row);
+      handleEdit(row.id);
     },
   },
 ];
@@ -124,6 +141,7 @@ const goEditor = () => {
     },
   });
 };
+
 onMounted(() => {
   getChapterList();
 });

@@ -10,6 +10,7 @@ export interface ChapterItem {
   status: number;
   count: number;
   content: string;
+  contentHtml: string;
   work: ChapterWork;
   createTime: string;
   updateTime: string;
@@ -34,6 +35,7 @@ export interface ChapterListResponse {
 export interface CreateChapterRequest {
   name: string;
   content: string;
+  contentHtml: string;
 }
 
 export type UpdateChapterRequest = Partial<CreateChapterRequest>;

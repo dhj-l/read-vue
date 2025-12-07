@@ -27,7 +27,14 @@
         </div>
       </div>
       <div class="w-[220px] flex justify-end">
-        <el-button type="primary"> 保存 </el-button>
+        <el-button type="primary" @click="handleSave"> 保存 </el-button>
+        <el-button
+          type="success"
+          @click="handlePublish"
+          v-if="status === -1 || status === 2"
+        >
+          发布
+        </el-button>
       </div>
     </header>
     <div class="flex-1 mt-5 px-10">
@@ -47,8 +54,9 @@
           </div>
         </el-splitter-panel>
         <el-splitter-panel size="20%" :min="400">
-          <div class="demo-panel">
+          <div class="w-full h-full">
             <!-- ai对话区域 -->
+            <Chat />
           </div>
         </el-splitter-panel>
       </el-splitter>
@@ -60,6 +68,18 @@
 import { ref, computed, onMounted } from "vue";
 import Back from "@/components/back/back.vue";
 import Editor from "@/components/editor/editor.vue";
+import Chat from "@/components/chat/chat.vue";
+import type { CreateChapterRequest } from "@/api/chapter/type";
+import {
+  createChapterAPI,
+  getChapterDetailAPI,
+  publishChapterAPI,
+  updateChapterAPI,
+} from "@/api/chapter/chapter";
+import { useRoute } from "vue-router";
+import emitter from "@/utils/eventEmitter";
+
+const route = useRoute();
 
 const chapterNo = ref<number>(1);
 const chapterTitle = ref<string>("");
@@ -67,8 +87,123 @@ const maxTitleLength = 30;
 const titleCount = computed(() => chapterTitle.value.length);
 const content = ref<string>("");
 const editorRef = ref<typeof Editor>();
+const lastTitle = ref<string>("");
+const lastContent = ref<string>("");
+const status = ref(-1);
+const workId = computed(() => {
+  return Number(route.query.workId || 0);
+});
+const chapterId = computed(() => {
+  return Number(route.query.chapterId);
+});
+//创建章节
+const createChapter = async (data: CreateChapterRequest) => {
+  if (!workId.value) {
+    emitter.emit("message", {
+      type: "error",
+      content: "书籍不存在",
+    });
+    return;
+  }
+  await createChapterAPI(workId.value, data);
+};
 
-onMounted(() => {});
+//更新章节
+const updateChapter = async (chapterId: number, data: CreateChapterRequest) => {
+  await updateChapterAPI(chapterId, data);
+};
+
+const validateTitle = () => {
+  if (!chapterTitle.value) {
+    emitter.emit("message", {
+      type: "error",
+      content: "请输入标题",
+    });
+    return false;
+  } else return true;
+};
+const validateContent = (content: string) => {
+  if (!content) {
+    emitter.emit("message", {
+      type: "error",
+      content: "请输入内容",
+    });
+    return false;
+  } else return true;
+};
+
+const handleSave = async () => {
+  const titleValid = validateTitle();
+  const contentText = editorRef.value?.editor.getText() || "";
+  const contentValid = validateContent(contentText);
+  if (!titleValid || !contentValid) return;
+  if (
+    lastTitle.value === chapterTitle.value &&
+    lastContent.value === contentText
+  ) {
+    emitter.emit("message", {
+      type: "error",
+      content: "内容未改变",
+    });
+    return;
+  }
+  lastTitle.value = chapterTitle.value;
+  lastContent.value = contentText;
+  const data: CreateChapterRequest = {
+    content: contentText,
+    contentHtml: content.value,
+    name: `第${chapterNo.value}章: ${chapterTitle.value}`,
+  };
+  if (chapterId.value) {
+    await updateChapter(chapterId.value, data);
+  } else {
+    await createChapter(data);
+  }
+  emitter.emit("message", {
+    type: "success",
+    content: "保存成功",
+  });
+};
+
+//根据传入的章节名称获取章节号
+const getChapterNo = (name: string) => {
+  const match = name.match(/第(\d+)章/);
+  return match ? Number(match[1]) : 0;
+};
+//根据传入的章节名称获取章节标题
+const getChapterTitle = (name: string) => {
+  const [, title = ""] = name.split(":");
+  return title.trim();
+};
+
+const getChapterDetail = async (chapterId: number) => {
+  //如果没有传递章节id就不用获取
+  if (!chapterId) return;
+  const res = await getChapterDetailAPI(chapterId);
+  const { data } = res;
+  chapterNo.value = getChapterNo(data.name || "");
+  chapterTitle.value = getChapterTitle(data.name || "");
+  content.value = data.contentHtml || data.content || "";
+  status.value = data.status;
+};
+
+const handlePublish = async () => {
+  const titleValid = validateTitle();
+  const contentText = editorRef.value?.editor.getText() || "";
+  const contentValid = validateContent(contentText);
+  if (!titleValid || !contentValid) return;
+  await handleSave();
+  await publishChapterAPI(chapterId.value);
+  emitter.emit("message", {
+    type: "success",
+    content: "发布成功，等待审核",
+  });
+  getChapterDetail(chapterId.value);
+};
+
+onMounted(() => {
+  getChapterDetail(chapterId.value);
+});
 </script>
 
 <style scoped></style>

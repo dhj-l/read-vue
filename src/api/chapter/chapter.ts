@@ -7,9 +7,7 @@ import type {
   ChapterItem,
 } from "./type";
 
-export const getChapterListAPI = async (
-  params: Partial<ChapterListParams>
-) => {
+export const getChapterListAPI = async (params: Partial<ChapterListParams>) => {
   return await http.get<ChapterListResponse>("/chapter", { params });
 };
 
@@ -33,4 +31,11 @@ export const updateChapterAPI = async (
 
 export const deleteChapterAPI = async (id: number) => {
   return await http.delete(`/chapter/${id}`);
+};
+
+/**
+ * 发布章节
+ */
+export const publishChapterAPI = async (id: number) => {
+  return await http.patch(`/chapter/${id}/pending`);
 };
