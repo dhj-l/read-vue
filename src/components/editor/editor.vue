@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-full">
+  <div class="w-full h-[calc(100vh-12rem)]">
     <EditorContent class="w-full h-full" :editor="editor" />
   </div>
 </template>
