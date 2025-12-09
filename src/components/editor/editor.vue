@@ -17,7 +17,6 @@ const editor = useEditor({
   extensions: [StarterKit],
   onUpdate({ editor }) {
     content.value = editor.getHTML();
-    console.log(content.value);
   },
 });
 watch(content, (newVal) => {

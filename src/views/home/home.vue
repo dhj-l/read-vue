@@ -28,7 +28,6 @@ const headerProps = computed(() => {
     };
   }
 });
-console.log(headerProps.value);
 
 const { getBookShelfList } = useBookShelfStore();
 onMounted(() => {
