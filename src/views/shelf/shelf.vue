@@ -13,7 +13,7 @@
           <div class="flex flex-col" v-if="bookShelfList.length > 0">
             <template v-for="item in bookShelfList" :key="item.id">
               <div class="mt-5 relative">
-                <BookCardDetail :work="item" />
+                <BookCardDetail :work="item" border shadow />
                 <el-button
                   type="danger"
                   size="small"

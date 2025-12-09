@@ -32,7 +32,11 @@ export const useChapters = () => {
   const detailDrawer = ref(false);
   const detail = ref<ChapterItem | null>(null);
   const formRef = ref<ComponentInstance<typeof ElForm>>();
-  const formData = ref<CreateChapterRequest>({ name: "", content: "" });
+  const formData = ref<CreateChapterRequest>({
+    name: "",
+    content: "",
+    contentHtml: "",
+  });
   const currentChapterId = ref<number | null>(null);
   // 编辑不允许修改所属作品，不再记录 currentWorkId
 
@@ -103,7 +107,11 @@ export const useChapters = () => {
 
   const handleEdit = (row: ChapterItem) => {
     currentChapterId.value = row.id;
-    formData.value = { name: row.name, content: row.content };
+    formData.value = {
+      name: row.name,
+      content: row.content,
+      contentHtml: row.contentHtml,
+    };
     drawer.value = true;
   };
 
@@ -111,7 +119,7 @@ export const useChapters = () => {
     drawer.value = false;
     formRef.value?.resetFields();
     currentChapterId.value = null;
-    formData.value = { name: "", content: "" };
+    formData.value = { name: "", content: "", contentHtml: "" };
   };
 
   const handleSubmit = async () => {

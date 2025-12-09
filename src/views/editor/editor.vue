@@ -41,7 +41,15 @@
       <el-splitter
         class="bg-white dark:bg-[#353535] w-full h-full rounded-lg shadow-md"
       >
-        <el-splitter-panel size="80%" :min="1000">
+        <el-splitter-panel
+          size="10%"
+          :max="300"
+          :min="200"
+          class="bg-[#f9fafb]"
+        >
+          <ConversationList />
+        </el-splitter-panel>
+        <el-splitter-panel size="70%" :min="1000">
           <div class="w-full h-full flex justify-center">
             <div class="w-[980px] min-h-[1000px]">
               <!-- 文本编辑器部分 -->
@@ -69,6 +77,7 @@ import { ref, computed, onMounted } from "vue";
 import Back from "@/components/back/back.vue";
 import Editor from "@/components/editor/editor.vue";
 import Chat from "@/components/chat/chat.vue";
+import ConversationList from "@/components/conversationList/conversationList.vue";
 import type { CreateChapterRequest } from "@/api/chapter/type";
 import {
   createChapterAPI,

@@ -39,7 +39,7 @@
     </div>
     <Sender
       class="mt-5"
-      :class="{ 'fixed bottom-0': messageList.length > 0 }"
+      :class="{ 'fixed bottom-0': status }"
       v-model:value="content"
       submit-type="shiftEnter"
       :auto-size="{ minRows: 2, maxRows: 6 }"
@@ -59,37 +59,42 @@ import {
   type BubbleProps,
 } from "ant-design-x-vue";
 import { items } from "./config";
-import { computed, h, onMounted, onUnmounted, ref } from "vue";
+import { h, onMounted, onUnmounted, ref, watch } from "vue";
 import markdownit from "markdown-it";
 import { useSocket } from "@/socket/socket";
 import emitter from "@/utils/eventEmitter";
-import type { Message } from "./type";
 import { Typography } from "ant-design-vue";
-import { getItem, setItem } from "@/utils/storage";
-import { getMessageListAPI } from "@/api/messages/messages";
+import { storeToRefs } from "pinia";
+import { useMessageStore } from "@/stores/modules/message/message";
+
+const { status, messageList, conversationId } = storeToRefs(useMessageStore());
+const {
+  setConversationId,
+  pushMessage,
+  getMessageList,
+  updateMessageItem,
+  updateMessageContent,
+  getConversationList,
+} = useMessageStore();
 const { socket } = useSocket("/chat");
 const content = ref("");
 const loading = ref(false);
 const bubbleLoading = ref(false);
-const messageList = ref<Message[]>([]);
 const md = markdownit({ html: true, breaks: true });
-const conversationId = ref(getItem("conversationId", false) || "");
 const renderMarkdown: BubbleProps["messageRender"] = (content) =>
   h(Typography, null, {
     default: () => h("div", { innerHTML: md.render(content) }),
   });
-const status = computed(() => {
-  return messageList.value.length > 0;
-});
+
 socket.on("chat:error", (error) => {
-  emitter.emit("noAuth");
+  emitter.emit("requestError", error.message || "请求失败");
 });
 
 const sendMessage = () => {
   if (!content.value) return;
   loading.value = true;
   bubbleLoading.value = true;
-  messageList.value.push({
+  pushMessage({
     content: content.value,
     type: "question",
     state: "finished",
@@ -103,7 +108,7 @@ const sendMessage = () => {
     });
   }
   content.value = "";
-  messageList.value.push({
+  pushMessage({
     content: "",
     type: "answer",
     state: "loading",
@@ -112,35 +117,29 @@ const sendMessage = () => {
 
 socket.on(
   "chat:conversationCreated",
-  ({ conversationId: newConversationId }) => {
-    setItem("conversationId", newConversationId);
-    conversationId.value = newConversationId;
+  async ({ conversationId: newConversationId }) => {
+    await getConversationList();
+    setConversationId(String(newConversationId));
   }
 );
 
 //流式获取回答
-socket.on("chat:stream", ({ chunk, done }) => {
+socket.on("chat:stream", ({ chunk, done, isCreate }) => {
   bubbleLoading.value = false;
-  messageList.value[messageList.value.length - 1]!.content += chunk;
-  messageList.value[messageList.value.length - 1]!.state = "stream";
+  updateMessageContent(chunk);
+  updateMessageItem("state", "stream");
+
   if (done) {
-    messageList.value[messageList.value.length - 1]!.state = "finished";
+    updateMessageItem("state", "finished");
     loading.value = false;
   }
 });
 
-const getMessageList = async () => {
-  if (!conversationId.value) return;
-  const res = await getMessageListAPI(Number(conversationId.value));
-  const { data } = res;
-  messageList.value = (data || []).map((item) => {
-    return {
-      content: item.message,
-      type: item.type,
-      state: item.state,
-    };
-  });
-};
+watch(conversationId, (newConversationId) => {
+  if (newConversationId) {
+    getMessageList();
+  }
+});
 
 onMounted(() => {
   socket.on("chat:connected", ({ id }) => {

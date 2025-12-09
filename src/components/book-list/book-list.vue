@@ -32,7 +32,7 @@
               class="mt-10 mr-22"
               :work="item"
             />
-            <BookCardDetail class="mb-10" v-else :work="item" />
+            <BookCardDetail class="mb-10" v-else :work="item" border shadow />
           </template>
         </div>
         <el-empty v-else description="暂无数据" />
