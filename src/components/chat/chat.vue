@@ -40,7 +40,6 @@
             : false
         "
         class="mb-5"
-        :class-names="{ footer: '' }"
       >
         <template #footer>
           <div
