@@ -11,6 +11,7 @@
     </div>
     <Conversations
       :items="items"
+      :menu="menuConfig"
       :active-key="String(conversationId)"
       @active-change="handleActiveChange"
       ref="conversationsRef"
@@ -22,8 +23,11 @@
 import { useMessageStore } from "@/stores/modules/message/message";
 import { Conversations, type ConversationsProps } from "ant-design-x-vue";
 import { storeToRefs } from "pinia";
-import { computed, onMounted } from "vue";
+import { computed, h, onMounted } from "vue";
 import { CirclePlus } from "@element-plus/icons-vue";
+import { DeleteOutlined } from "@ant-design/icons-vue";
+import { removeConversationAPI } from "@/api/conversations/conversations";
+import emitter from "@/utils/eventEmitter";
 const { conversationId, conversationList } = storeToRefs(useMessageStore());
 const { setConversationId, removeConversation, getConversationList } =
   useMessageStore();
@@ -38,6 +42,31 @@ const items = computed<ConversationsProps["items"]>(() => {
 
   return items;
 });
+const menuConfig: ConversationsProps["menu"] = (conversation) => ({
+  items: [
+    {
+      label: "删除会话",
+      key: conversation.key,
+      icon: h(DeleteOutlined),
+      danger: true,
+    },
+  ],
+  onClick: async (menuInfo) => {
+    await removeConversationItem(String(menuInfo.key));
+    if (String(menuInfo.key) === conversationId.value) {
+      removeConversation();
+    }
+    await getConversationList();
+    emitter.emit("message", {
+      type: "success",
+      content: "删除会话成功",
+    });
+  },
+});
+
+const removeConversationItem = async (key: string) => {
+  await removeConversationAPI(key);
+};
 
 const handleActiveChange = (key: string) => {
   setConversationId(key);
