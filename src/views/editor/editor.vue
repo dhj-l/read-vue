@@ -1,5 +1,7 @@
 <template>
-  <div class="w-full h-full bg-[#fafaf8] flex flex-col dark:bg-[#2b2b2b]">
+  <div
+    class="w-full h-screen overflow-hidden bg-[#fafaf8] flex flex-col dark:bg-[#2b2b2b]"
+  >
     <header
       class="p-5 h-[100px] w-full bg-white dark:bg-[#353535] flex items-center justify-between"
     >
@@ -37,7 +39,7 @@
         </el-button>
       </div>
     </header>
-    <div class="flex-1 mt-5 px-10">
+    <div class="flex-1 mt-5 px-10 h-[calc(100vh-100px-20px)] overflow-hidden">
       <el-splitter
         class="bg-white dark:bg-[#353535] w-full h-full rounded-lg shadow-md"
       >
@@ -45,12 +47,18 @@
           size="10%"
           :max="300"
           :min="200"
-          class="bg-[#f9fafb]"
+          class="bg-[#f9fafb] h-full"
         >
-          <ConversationList />
+          <div
+            class="w-full h-full overflow-y-auto overscroll-contain scroll-thin"
+          >
+            <ConversationList />
+          </div>
         </el-splitter-panel>
         <el-splitter-panel size="70%" :min="1000">
-          <div class="w-full h-full flex justify-center">
+          <div
+            class="w-full h-full flex justify-center overflow-y-auto overscroll-contain scroll-thin"
+          >
             <div class="w-[980px] min-h-[1000px]">
               <!-- 文本编辑器部分 -->
               <Editor
@@ -62,7 +70,9 @@
           </div>
         </el-splitter-panel>
         <el-splitter-panel size="20%" :min="400">
-          <div class="w-full h-full">
+          <div
+            class="w-full h-full overflow-y-auto overscroll-contain scroll-thin"
+          >
             <!-- ai对话区域 -->
             <Chat />
           </div>
@@ -215,4 +225,20 @@ onMounted(() => {
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.scroll-thin {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+.scroll-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.scroll-thin::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 9999px;
+}
+.scroll-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+</style>

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full h-full flex flex-col items-center px-5 py-10"
+    class="w-full h-full flex flex-col rounded-lg items-center p-5"
     :class="{ 'justify-end': status, 'justify-center': !status }"
   >
     <div class="w-full" v-if="!status">
@@ -22,10 +22,15 @@
         }"
       />
     </div>
-    <div class="w-full flex flex-col justify-start overflow-auto" v-else>
+    <div
+      class="w-full h-full flex flex-col justify-start overflow-auto"
+      v-else
+      ref="messageScrollRef"
+      @scroll="onScroll"
+    >
       <Bubble
-        v-for="item in messageList"
-        :key="item.content"
+        v-for="(item, index) in messageList"
+        :key="`${item.content}-${index}`"
         :content="item.content"
         :placement="item.type === 'answer' ? 'start' : 'end'"
         :message-render="renderMarkdown"
@@ -35,7 +40,22 @@
             : false
         "
         class="mb-5"
-      />
+        :class-names="{ footer: '' }"
+      >
+        <template #footer>
+          <div
+            v-if="item.type === 'answer' && item.state === 'finished'"
+            class="flex justify-end w-full items-center ml-1"
+          >
+            <Tooltip title="复制">
+              <CopyOutlined
+                class="cursor-pointer text-base"
+                @click="copy(item.content)"
+              />
+            </Tooltip>
+          </div>
+        </template>
+      </Bubble>
     </div>
     <Sender
       class="mt-5"
@@ -66,6 +86,11 @@ import emitter from "@/utils/eventEmitter";
 import { Typography } from "ant-design-vue";
 import { storeToRefs } from "pinia";
 import { useMessageStore } from "@/stores/modules/message/message";
+import { useScrollHook } from "@/hooks/useScroll";
+import { CopyOutlined } from "@ant-design/icons-vue";
+import { Tooltip } from "ant-design-vue";
+import { copy } from "@/utils/copy";
+const { maybeScrollToBottom, onScroll, messageScrollRef } = useScrollHook();
 
 const { status, messageList, conversationId } = storeToRefs(useMessageStore());
 const {
@@ -113,6 +138,7 @@ const sendMessage = () => {
     type: "answer",
     state: "loading",
   });
+  maybeScrollToBottom();
 };
 
 socket.on(
@@ -124,28 +150,31 @@ socket.on(
 );
 
 //流式获取回答
-socket.on("chat:stream", ({ chunk, done, isCreate }) => {
+socket.on("chat:stream", ({ chunk, done }) => {
   bubbleLoading.value = false;
   updateMessageContent(chunk);
   updateMessageItem("state", "stream");
-
+  maybeScrollToBottom();
+  loading.value = true;
   if (done) {
     updateMessageItem("state", "finished");
     loading.value = false;
   }
 });
 
-watch(conversationId, (newConversationId) => {
+watch(conversationId, async (newConversationId) => {
   if (newConversationId) {
-    getMessageList();
+    await getMessageList();
+    await maybeScrollToBottom();
   }
 });
 
-onMounted(() => {
+onMounted(async () => {
   socket.on("chat:connected", ({ id }) => {
     console.log("连接成功", id);
   });
-  getMessageList();
+  await getMessageList();
+  await maybeScrollToBottom();
 });
 
 onUnmounted(() => {
