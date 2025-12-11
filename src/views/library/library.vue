@@ -157,12 +157,14 @@ const getCategoryList = async () => {
   cateGoryConfig.value = res.data.categories;
 };
 const getWorkList = async (query?: BookListChangeParams) => {
+  console.log(selectedIndex.value[1]);
+
   //获取携带参数
   const params = {
     category_ids:
       selectedIndex.value[0] === 0 ? "-1" : [selectedIndex.value[0]!],
     status:
-      selectedIndex.value[1] === 0
+      selectedIndex.value[1] === -1
         ? WorkStatus.PUBLISHED_SERIAL_ENDED
         : selectedIndex.value[1],
     count:

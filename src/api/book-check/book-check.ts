@@ -22,3 +22,13 @@ export const updateBookCheckAPI = async (
 ) => {
   return await http.patch(`/book-check/${id}`, data);
 };
+
+/**
+ * 再次审核接口
+ */
+
+export const rejectBookCheckAPI = async (id: number) => {
+  return await http.post("/book-check", {
+    workId: id,
+  });
+};

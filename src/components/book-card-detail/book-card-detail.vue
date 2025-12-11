@@ -50,7 +50,7 @@
           </div>
           <div class="bg-gray-50 p-2 rounded">
             <p class="text-xs text-gray-500">字数</p>
-            <p class="text-sm font-medium">{{ work.count }}字</p>
+            <p class="text-sm font-medium">{{ formateCount(work.count) }}字</p>
           </div>
           <div class="bg-gray-50 p-2 rounded">
             <p class="text-xs text-gray-500">章节</p>
@@ -85,7 +85,7 @@ import { computed } from "vue";
 import type { Work } from "@/api/works/type";
 import { API_BASE_URL } from "@/config/config";
 import { workStatusMap } from "@/layout/works/config";
-import { formateTime } from "@/utils/formdate";
+import { formateCount, formateTime } from "@/utils/formdate";
 import { useRouter } from "vue-router";
 
 export interface BookCardDetailProps {

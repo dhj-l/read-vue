@@ -48,6 +48,14 @@
                     >
                       章节管理
                     </el-button>
+                    <el-button
+                      type="warning"
+                      size="small"
+                      @click.stop="handleReviewClick(item)"
+                      v-if="item.status === WorkStatus.REJECTED"
+                    >
+                      再次审核
+                    </el-button>
                   </div>
                 </div>
               </template>
@@ -115,6 +123,8 @@ import {
 import { WorkStatus, workStatusMap } from "@/layout/works/config";
 import emitter from "@/utils/eventEmitter";
 import { useRouter } from "vue-router";
+import { messageHandle } from "../../../layout/users/config";
+import { rejectBookCheckAPI } from "@/api/book-check/book-check";
 const router = useRouter();
 const loading = ref(false);
 const workList = ref<Work[]>([]);
@@ -229,6 +239,20 @@ const handleWorkSubmit = async (payload: {
   });
   // 创建或更新成功后刷新列表
   getWorkList();
+};
+const handleReviewClick = async (work: Work) => {
+  messageHandle({
+    type: "warning",
+    message: "是否再次审核该作品？",
+    handle: async () => {
+      await rejectBookCheckAPI(work.id);
+      emitter.emit("message", {
+        type: "success",
+        content: "再次审核成功",
+      });
+      getWorkList();
+    },
+  });
 };
 
 onMounted(() => {

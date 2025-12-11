@@ -6,12 +6,12 @@
     <div class="w-full" v-if="!status">
       <Welcome
         icon="https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*s5sNRo5LjfQAAAAAAAAAAAAADgCCAQ/fmt.webp"
-        title="Hello, I'm Ant Design X"
-        description="Base on Ant Design, AGI product interface solution, create a better intelligent vision~"
+        title="你好，我是你的写作助手"
+        description="我可以为你提供创作灵感、创作建议、创作工具等。"
       />
       <Prompts
         class="mt-5"
-        title="✨ Inspirational Sparks and Marvelous Tips666"
+        title="✨ 创作灵感和创作建议"
         :items="items"
         wrap
         :styles="{
@@ -20,6 +20,7 @@
             width: 'calc(50% - 6px)',
           },
         }"
+        @item-click="handleItemClick"
       />
     </div>
     <div
@@ -34,11 +35,7 @@
         :content="item.content"
         :placement="item.type === 'answer' ? 'start' : 'end'"
         :message-render="renderMarkdown"
-        :loading="
-          item.type === 'answer' && item.state === 'loading'
-            ? bubbleLoading
-            : false
-        "
+        :loading="item.type === 'answer' && item.state === 'loading'"
         class="mb-5"
       >
         <template #footer>
@@ -62,8 +59,9 @@
       v-model:value="content"
       submit-type="shiftEnter"
       :auto-size="{ minRows: 2, maxRows: 6 }"
-      placeholder="Press Shift + Enter to send message"
+      placeholder="按住 Shift + Enter 发送消息"
       @submit="sendMessage"
+      @cancel="handleCancel"
       :loading="loading"
     />
   </div>
@@ -112,6 +110,8 @@ const renderMarkdown: BubbleProps["messageRender"] = (content) =>
 
 socket.on("chat:error", (error) => {
   emitter.emit("requestError", error.message || "请求失败");
+  loading.value = false;
+  bubbleLoading.value = false;
 });
 
 const sendMessage = () => {
@@ -123,6 +123,11 @@ const sendMessage = () => {
     type: "question",
     state: "finished",
   });
+  pushMessage({
+    content: "",
+    type: "answer",
+    state: "loading",
+  });
   if (!conversationId.value) {
     socket.emit("chat:create", { content: content.value });
   } else {
@@ -132,11 +137,7 @@ const sendMessage = () => {
     });
   }
   content.value = "";
-  pushMessage({
-    content: "",
-    type: "answer",
-    state: "loading",
-  });
+
   maybeScrollToBottom();
 };
 
@@ -161,10 +162,25 @@ socket.on("chat:stream", ({ chunk, done }) => {
   }
 });
 
-watch(conversationId, async (newConversationId) => {
+const handleItemClick = (item: any) => {
+  const { data } = item;
+  content.value = data.description;
+  sendMessage();
+};
+const handleCancel = (coversationId = conversationId.value) => {
+  loading.value = false;
+  bubbleLoading.value = false;
+  updateMessageItem("state", "finished");
+  socket.emit("chat:abort", { conversationId: coversationId });
+};
+
+watch(conversationId, async (newConversationId, oldConversationId) => {
   if (newConversationId) {
     await getMessageList();
     await maybeScrollToBottom();
+    if (oldConversationId) {
+      handleCancel(oldConversationId);
+    }
   }
 });
 

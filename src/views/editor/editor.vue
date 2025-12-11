@@ -33,7 +33,7 @@
         <el-button
           type="success"
           @click="handlePublish"
-          v-if="status === -1 || status === 2"
+          v-if="(status === -1 || status === 2) && chapterId"
         >
           发布
         </el-button>
@@ -95,10 +95,11 @@ import {
   publishChapterAPI,
   updateChapterAPI,
 } from "@/api/chapter/chapter";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import emitter from "@/utils/eventEmitter";
 
 const route = useRoute();
+const router = useRouter();
 
 const chapterNo = ref<number>(1);
 const chapterTitle = ref<string>("");
@@ -124,7 +125,7 @@ const createChapter = async (data: CreateChapterRequest) => {
     });
     return;
   }
-  await createChapterAPI(workId.value, data);
+  return await createChapterAPI(workId.value, data);
 };
 
 //更新章节
@@ -176,7 +177,15 @@ const handleSave = async () => {
   if (chapterId.value) {
     await updateChapter(chapterId.value, data);
   } else {
-    await createChapter(data);
+    const res = await createChapter(data);
+    if (res?.data.id) {
+      router.replace({
+        query: {
+          ...route.query,
+          chapterId: res.data.id,
+        },
+      });
+    }
   }
   emitter.emit("message", {
     type: "success",
@@ -211,7 +220,11 @@ const handlePublish = async () => {
   const contentText = editorRef.value?.editor.getText() || "";
   const contentValid = validateContent(contentText);
   if (!titleValid || !contentValid) return;
-  await handleSave();
+  await updateChapter(chapterId.value, {
+    name: `第${chapterNo.value}章: ${chapterTitle.value}`,
+    content: contentText,
+    contentHtml: content.value,
+  });
   await publishChapterAPI(chapterId.value);
   emitter.emit("message", {
     type: "success",

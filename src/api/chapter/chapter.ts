@@ -19,7 +19,7 @@ export const createChapterAPI = async (
   workId: number,
   data: CreateChapterRequest
 ) => {
-  return await http.post(`/chapter/${workId}`, data);
+  return await http.post<{ id: number }>(`/chapter/${workId}`, data);
 };
 
 export const updateChapterAPI = async (

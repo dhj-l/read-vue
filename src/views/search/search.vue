@@ -42,6 +42,7 @@ import { getWorksListAPI } from "@/api/works/works";
 import { Search } from "@element-plus/icons-vue";
 import type { BookListChangeParams } from "@/components/book-list/type";
 import { useRouter } from "vue-router";
+import { WorkStatus } from "@/layout/works/config";
 
 const route = useRoute();
 const router = useRouter();
@@ -69,6 +70,7 @@ const params = computed(() => {
     title: keyword.value,
     username: keyword.value,
     order: SortOrder.HOT,
+    status: WorkStatus.PUBLISHED_SERIAL_ENDED,
   };
 });
 const getWorkList = async (data: Partial<WorksSearchQuery>) => {

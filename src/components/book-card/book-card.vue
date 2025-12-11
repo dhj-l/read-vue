@@ -28,7 +28,7 @@
           <span class="mr-3">
             {{ bookStatus }}
           </span>
-          <span> {{ work.count }}字 </span>
+          <span> {{ formateCount(work.count) }}字 </span>
         </p>
         <p class="w-full clamp-2">{{ work.description }}</p>
         <p class="mt-1">{{ formateTime(work.createTime) }}</p>
@@ -43,7 +43,7 @@ import { computed } from "vue";
 import type { Work } from "@/api/works/type";
 import { API_BASE_URL } from "@/config/config";
 import { workStatusMap } from "@/layout/works/config";
-import { formateTime } from "@/utils/formdate";
+import { formateCount, formateTime } from "@/utils/formdate";
 import { useRouter } from "vue-router";
 
 export interface BookCardProps {
