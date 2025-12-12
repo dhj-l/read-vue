@@ -4,6 +4,7 @@ import type {
   CreateWorkRequest,
   FindAllByUserParams,
   UpdateWorkRequest,
+  UserWorkInfo,
   Work,
   WorksListResponse,
 } from "./type";
@@ -67,4 +68,12 @@ export const createWorkAPI = async (params: CreateWorkRequest) => {
     params.category_ids = params.category_ids.join(",");
   }
   return await http.post<Work>("/works", params);
+};
+
+/**
+ * 获取个人作品数据
+ */
+
+export const getUserWorksDataAPI = async () => {
+  return await http.get<UserWorkInfo>("/works/statistics");
 };

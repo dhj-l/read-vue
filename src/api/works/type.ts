@@ -64,3 +64,10 @@ export interface FindAllByUserParams {
   page: number;
   pageSize: number;
 }
+
+export interface UserWorkInfo {
+  totalWorks: number;
+  totalChapters: number;
+  totalReads: number;
+  pendingChecks: number;
+}
