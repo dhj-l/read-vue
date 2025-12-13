@@ -22,7 +22,6 @@
             </p>
             <p class="text-3xl font-bold text-gray-900 mt-2 flex items-center">
               {{ userWorkInfo[config.valueKey] }}
-
               <span class="text-xs font-normal text-gray-500 ml-2 mt-1">{{
                 config.unit
               }}</span>
@@ -38,15 +37,38 @@
     </div>
 
     <!-- 主要内容区域 -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6"></div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- 左侧：阅读量统计图表 -->
+      <div
+        class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100 p-6"
+      >
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-lg font-semibold text-gray-900">书籍阅读量统计</h3>
+        </div>
+        <div ref="chartRef" class="h-full w-full"></div>
+      </div>
+
+      <!-- 右侧：日历和其他组件 -->
+      <div class="space-y-6">
+        <!-- 日历组件 -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">创作日历</h3>
+          <el-calendar v-model="calendarValue" class="custom-calendar" />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, toRaw } from "vue";
 import { Document, List, View, Warning } from "@element-plus/icons-vue";
-import { getUserWorksDataAPI } from "@/api/works/works";
-import type { UserWorkInfo } from "@/api/works/type";
+import {
+  getUserAllWorksReadsAPI,
+  getUserWorksDataAPI,
+} from "@/api/works/works";
+import type { UserWorkInfo, WorkReads } from "@/api/works/type";
+import { initChart } from "./config";
 
 // 定义卡片配置接口
 interface CardConfig {
@@ -58,7 +80,7 @@ interface CardConfig {
   unit: string;
 }
 
-// 卡片配置数组 - 抽取背景颜色和样式信息
+// 卡片配置数组
 const cardConfigs: CardConfig[] = [
   {
     backgroundClass: "bg-gradient-to-br from-blue-50 to-white",
@@ -94,20 +116,88 @@ const cardConfigs: CardConfig[] = [
   },
 ];
 
+// 响应式数据
 const userWorkInfo = ref<UserWorkInfo>({
-  totalWorks: 5,
-  totalChapters: 574,
-  totalReads: 186720,
-  pendingChecks: 1,
+  totalWorks: 0,
+  totalChapters: 0,
+  totalReads: 0,
+  pendingChecks: 0,
 });
 
+const userAllWorksReads = ref<WorkReads[]>([]);
+
+const chartRef = ref<HTMLElement>();
+const calendarValue = ref(new Date());
+
+// 获取用户作品信息
 const getUserWorkInfo = async () => {
   const res = await getUserWorksDataAPI();
   userWorkInfo.value = res.data;
-  console.log(userWorkInfo.value);
+};
+
+const getUserAllWorksReads = async () => {
+  const res = await getUserAllWorksReadsAPI();
+  userAllWorksReads.value = res.data;
+  initChart(chartRef.value!, userAllWorksReads.value);
 };
 
 onMounted(() => {
   getUserWorkInfo();
+  getUserAllWorksReads();
 });
 </script>
+
+<style scoped>
+.custom-calendar {
+  --el-calendar-border: none;
+}
+
+.custom-calendar :deep(.el-calendar__header) {
+  border-bottom: 1px solid #e5e7eb;
+  padding: 12px 20px;
+}
+
+.custom-calendar :deep(.el-calendar__body) {
+  padding: 12px;
+}
+
+.custom-calendar :deep(.el-calendar-table) {
+  border: none;
+}
+
+.custom-calendar :deep(.el-calendar-day) {
+  border: none;
+  padding: 8px;
+}
+
+.calendar-cell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.day-number {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.writing-indicator {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+}
+
+.custom-calendar :deep(.is-selected) {
+  background-color: #3b82f6;
+  color: white;
+  border-radius: 6px;
+}
+
+.custom-calendar :deep(.is-today) {
+  background-color: #dbeafe;
+  border-radius: 6px;
+}
+</style>

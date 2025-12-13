@@ -1,5 +1,10 @@
 <template>
-  <el-dialog v-model="open" title="编辑作品信息" @close="handleClose">
+  <el-dialog
+    v-model="open"
+    title="编辑作品信息"
+    @close="handleClose"
+    width="800px"
+  >
     <el-form
       ref="workFormRef"
       :model="formData"

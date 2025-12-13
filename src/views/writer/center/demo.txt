@@ -1,0 +1,343 @@
+onMounted(() => {
+  let myChart1 = echarts.init(document.querySelector(".chart"));
+  let myChart2 = echarts.init(document.querySelector(".charts"));
+  var colorList = ["#f36c6c", "#e6cf4e", "#20d180", "#0093ff"];
+  var datas = [
+    {
+      value: 350,
+      name: "心血管科",
+    },
+    {
+      value: 280,
+      name: "神经科",
+    },
+    {
+      value: 235,
+      name: "消化内科",
+    },
+    {
+      value: 190,
+      name: "呼吸科",
+    },
+    {
+      value: 190,
+      name: "骨科",
+    },
+    {
+      value: 175,
+      name: "儿科",
+    },
+    {
+      value: 150,
+      name: "妇产科",
+    },
+    {
+      value: 95,
+      name: "耳鼻喉科",
+    },
+  ];
+
+  let option = {
+    tooltip: {
+      trigger: "axis",
+      axisPointer: {
+        type: "shadow",
+      },
+    },
+    legend: {
+      show: false,
+    },
+    grid: {
+      left: 0,
+      right: "5%",
+      top: "5%",
+      bottom: "2%",
+      containLabel: true,
+    },
+    xAxis: {
+      show: false,
+      type: "value",
+    },
+    yAxis: [
+      {
+        type: "category",
+        inverse: true,
+        axisLine: {
+          show: false,
+        },
+        axisTick: {
+          show: false,
+        },
+        axisPointer: {
+          label: {
+            show: true,
+            margin: 30,
+          },
+        },
+        data: datas.map((item) => item.name),
+        axisLabel: {
+          margin: 50,
+          fontSize: 14,
+          align: "left",
+          color: "#333",
+          rich: {
+            a1: {
+              color: "#fff",
+              backgroundColor: colorList[0],
+              width: 30,
+              height: 30,
+              align: "center",
+              borderRadius: 2,
+            },
+            a2: {
+              color: "#fff",
+              backgroundColor: colorList[1],
+              width: 30,
+              height: 30,
+              align: "center",
+              borderRadius: 2,
+            },
+            a3: {
+              color: "#fff",
+              backgroundColor: colorList[2],
+              width: 30,
+              height: 30,
+              align: "center",
+              borderRadius: 2,
+            },
+            b: {
+              color: "#fff",
+              backgroundColor: colorList[3],
+              width: 30,
+              height: 30,
+              align: "center",
+              borderRadius: 2,
+            },
+          },
+          formatter: function (params) {
+            var index = datas.map((item) => item.name).indexOf(params);
+            index = index + 1;
+            if (index - 1 < 3) {
+              return ["{a" + index + "|" + index + "}"].join("\n");
+            } else {
+              return ["{b|" + index + "}"].join("\n");
+            }
+          },
+        },
+      },
+      {
+        type: "category",
+        inverse: true,
+        axisTick: "none",
+        axisLine: "none",
+        show: true,
+        data: datas.map((item) => item.value),
+        axisLabel: {
+          show: true,
+          fontSize: 14,
+          color: "#333",
+          formatter: "{value}",
+        },
+      },
+    ],
+    series: [
+      {
+        z: 2,
+        name: "value",
+        type: "bar",
+        barCategoryGap: "40%",
+        barGap: "20%",
+        barWidth: 16,
+        data: datas.map((item, i) => {
+          var itemStyle = {
+            color: i > 3 ? colorList[3] : colorList[i],
+            barBorderRadius: [10, 10, 10, 10],
+          };
+          return {
+            value: item.value,
+            itemStyle: itemStyle,
+          };
+        }),
+        label: {
+          normal: {
+            color: "#666",
+            show: true,
+            position: [0, "-18px"],
+            textStyle: {
+              fontSize: 14,
+            },
+            formatter: function (a, b) {
+              return a.name;
+            },
+          },
+        },
+      },
+    ],
+  };
+  var ydata = [
+    {
+      name: "心血管科",
+      value: 18,
+    },
+    {
+      name: "神经科",
+      value: 16,
+    },
+    {
+      name: "消化内科",
+      value: 15,
+    },
+    {
+      name: "呼吸科",
+      value: 14,
+    },
+    {
+      name: "骨科",
+      value: 10,
+    },
+    {
+      name: "儿科",
+      value: 7.9,
+    },
+    {
+      name: "妇产科",
+      value: 6.7,
+    },
+    {
+      name: "眼科",
+      value: 6,
+    },
+    {
+      name: "耳鼻喉科",
+      value: 4.5,
+    },
+    {
+      name: "口腔科",
+      value: 3,
+    },
+  ];
+  var color = [
+    "#8d7fec",
+    "#5085f2",
+    "#e75fc3",
+    "#f87be2",
+    "#f2719a",
+    "#fca4bb",
+    "#f59a8f",
+    "#fdb301",
+    "#57e7ec",
+    "#cf9ef1",
+  ];
+  var xdata = [
+    "心血管科",
+    "神经科",
+    "消化内科",
+    "呼吸科",
+    "骨科",
+    "儿科",
+    "妇产科",
+    "眼科",
+    "耳鼻喉科",
+    "口腔科",
+  ];
+
+  let option2 = {
+    // backgroundColor: "rgba(255,255,255,1)",
+    color: color  ,
+    legend: {
+      orient: "vartical",
+      x: "left",
+      top: "center",
+      left: "60%",
+      bottom: "0%",
+      data: xdata,
+      itemWidth: 8,
+      itemHeight: 8,
+      itemGap: 16,
+
+
+      formatter: function (name) {
+        return "" + name;
+      },
+    },
+    series: [
+      {
+        type: "pie",
+        clockwise: false, //饼图的扇区是否是顺时针排布
+        minAngle: 2, //最小的扇区角度（0 ~ 360）
+        radius: ["40%", "70%"],
+        center: ["30%", "50%"],
+        avoidLabelOverlap: false,
+        itemStyle: {
+          //图形样式
+          normal: {
+            borderColor: "#ffffff",
+            borderWidth: 6,
+          },
+        },
+        label: {
+          normal: {
+            show: false,
+            position: "center",
+            formatter: "{text|{b}}\n{c} ({d}%)",
+            rich: {
+              text: {
+                color: "#666",
+                fontSize: 14,
+                align: "center",
+                verticalAlign: "middle",
+                padding: 8,
+              },
+              value: {
+                color: "#8693F3",
+                fontSize: 24,
+                align: "center",
+                verticalAlign: "middle",
+              },
+            },
+          },
+          emphasis: {
+            show: true,
+            textStyle: {
+              fontSize: 24,
+            },
+          },
+        },
+        data: ydata,
+      }
+    ],
+  };
+  myChart2.setOption(option2);
+  myChart1.setOption(option);
+  setTimeout(function () {
+    myChart2.on("mouseover", function (params) {
+      if (params.name == ydata[0].name) {
+        myChart2.dispatchAction({
+          type: "highlight",
+          seriesIndex: 0,
+          dataIndex: 0,
+        });
+      } else {
+        myChart2.dispatchAction({
+          type: "downplay",
+          seriesIndex: 0,
+          dataIndex: 0,
+        });
+      }
+    });
+
+    myChart2.on("mouseout", function (params) {
+      myChart2.dispatchAction({
+        type: "highlight",
+        seriesIndex: 0,
+        dataIndex: 0,
+      });
+    });
+    myChart2.dispatchAction({
+      type: "highlight",
+      seriesIndex: 0,
+      dataIndex: 0,
+    });
+  }, 1000);
+  
+});

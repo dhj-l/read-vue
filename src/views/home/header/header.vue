@@ -46,16 +46,20 @@
           <el-divider direction="vertical" />
         </template>
 
-        <el-dropdown>
-          <span class="el-dropdown-link flex items-center">
-            <el-avatar :size="32" class="mr-2" />
-            <span class="text-gray-700">昵称占位</span>
-            <el-icon class="ml-1"><ArrowDown /></el-icon>
-          </span>
+        <el-dropdown trigger="click">
+          <div class="flex items-center w-20 cursor-pointer">
+            <span class="text-gray-700 truncate">{{ userInfo?.username }}</span>
+            <el-icon class="ml-1 w-5 h-5 text-gray-400"><ArrowDown /></el-icon>
+          </div>
+
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item>个人中心</el-dropdown-item>
-              <el-dropdown-item divided>退出登录</el-dropdown-item>
+              <el-dropdown-item @click="handleCenter"
+                >个人中心</el-dropdown-item
+              >
+              <el-dropdown-item divided @click="handleLogout"
+                >退出登录</el-dropdown-item
+              >
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -68,6 +72,9 @@
 import { computed, ref } from "vue";
 import { Search, ArrowDown } from "@element-plus/icons-vue";
 import { useRoute, useRouter } from "vue-router";
+import { useUserStore } from "@/stores/modules/user/user";
+import { storeToRefs } from "pinia";
+import emitter from "@/utils/eventEmitter";
 
 type NavKey =
   | "home"
@@ -113,6 +120,9 @@ const router = useRouter();
 const route = useRoute();
 const activeKey = ref<NavKey>((route.name as NavKey) || "home");
 const keyword = ref<string>("");
+
+const { userInfo } = storeToRefs(useUserStore());
+
 const onSelect = (item: NavItem) => {
   activeKey.value = item.key;
   router.push(item.path);
@@ -125,6 +135,16 @@ const handleSearch = () => {
     query: {
       keyword: keyword.value,
     },
+  });
+};
+
+const handleLogout = () => {
+  emitter.emit("logout");
+};
+
+const handleCenter = () => {
+  router.push({
+    path: "/home/center",
   });
 };
 </script>

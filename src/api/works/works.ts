@@ -6,6 +6,7 @@ import type {
   UpdateWorkRequest,
   UserWorkInfo,
   Work,
+  WorkReads,
   WorksListResponse,
 } from "./type";
 
@@ -73,7 +74,20 @@ export const createWorkAPI = async (params: CreateWorkRequest) => {
 /**
  * 获取个人作品数据
  */
-
 export const getUserWorksDataAPI = async () => {
   return await http.get<UserWorkInfo>("/works/statistics");
+};
+
+/**
+ * 获取个人所有作品阅读数据
+ */
+export const getUserAllWorksReadsAPI = async () => {
+  return await http.get<WorkReads[]>("/works/reads");
+};
+
+/**
+ * 获取所有作品阅读量前10的作品
+ */
+export const getTop10WorksReadsAPI = async () => {
+  return await http.get<WorkReads[]>("/works/top-reads");
 };

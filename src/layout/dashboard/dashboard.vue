@@ -1,144 +1,85 @@
 <template>
-  <div class="p-6">
-    <div class="mb-6">
-      <h1 class="text-2xl font-bold text-gray-900">仪表盘</h1>
-      <p class="text-gray-600 mt-2">欢迎使用管理系统，这里是系统概览</p>
+  <div class="admin-dashboard h-full p-6 overflow-auto">
+    <!-- 页面标题 -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">小说后台管理系统</h1>
+      <p class="text-gray-600">数据总览与系统管理</p>
     </div>
-    
-    <!-- 统计卡片 -->
+
+    <!-- 数据概览卡片 -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-      <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-sm font-medium text-gray-600">总用户数</p>
-            <p class="text-3xl font-bold text-gray-900">1,234</p>
-          </div>
-          <div class="p-3 bg-blue-100 rounded-full">
-            <el-icon class="text-blue-600" size="24">
-              <User />
-            </el-icon>
-          </div>
+      <!-- 卡片内容待填充 -->
+    </div>
+
+    <!-- 主要内容区域 -->
+    <div class="grid grid-cols-1 xl:grid-cols-4 gap-6 mb-8">
+      <!-- 小说分类分布饼图 -->
+      <div
+        class="xl:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100 p-6"
+      >
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-lg font-semibold text-gray-900">小说分类分布</h3>
+          <!-- 选择器待填充 -->
         </div>
-        <div class="mt-4 text-sm text-green-600">
-          <span class="font-medium">+12%</span>
-          <span class="text-gray-600 ml-1">相比上月</span>
-        </div>
+        <div ref="pieChartRef" class="h-full w-full"></div>
       </div>
-      
-      <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-sm font-medium text-gray-600">总文章数</p>
-            <p class="text-3xl font-bold text-gray-900">5,678</p>
-          </div>
-          <div class="p-3 bg-green-100 rounded-full">
-            <el-icon class="text-green-600" size="24">
-              <Document />
-            </el-icon>
-          </div>
-        </div>
-        <div class="mt-4 text-sm text-green-600">
-          <span class="font-medium">+8%</span>
-          <span class="text-gray-600 ml-1">相比上月</span>
-        </div>
-      </div>
-      
-      <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-sm font-medium text-gray-600">总分类数</p>
-            <p class="text-3xl font-bold text-gray-900">89</p>
-          </div>
-          <div class="p-3 bg-yellow-100 rounded-full">
-            <el-icon class="text-yellow-600" size="24">
-              <Folder />
-            </el-icon>
-          </div>
-        </div>
-        <div class="mt-4 text-sm text-red-600">
-          <span class="font-medium">-2%</span>
-          <span class="text-gray-600 ml-1">相比上月</span>
-        </div>
-      </div>
-      
-      <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-sm font-medium text-gray-600">系统运行天数</p>
-            <p class="text-3xl font-bold text-gray-900">365</p>
-          </div>
-          <div class="p-3 bg-purple-100 rounded-full">
-            <el-icon class="text-purple-600" size="24">
-              <Clock />
-            </el-icon>
-          </div>
-        </div>
-        <div class="mt-4 text-sm text-gray-600">
-          <span class="font-medium">稳定运行</span>
-        </div>
+
+      <!-- 日历组件 -->
+      <div
+        class="xl:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100 p-6"
+      >
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">系统日历</h3>
+        <el-calendar v-model="calendarValue" class="custom-calendar" />
       </div>
     </div>
-    
-    <!-- 最近活动 -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-        <div class="p-6 border-b border-gray-200">
-          <h2 class="text-lg font-semibold text-gray-900">最近活动</h2>
-        </div>
-        <div class="p-6">
-          <div class="space-y-4">
-            <div class="flex items-center space-x-3">
-              <el-avatar size="small" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
-              <div class="flex-1">
-                <p class="text-sm font-medium text-gray-900">张三发布了新文章</p>
-                <p class="text-xs text-gray-500">2小时前</p>
-              </div>
-            </div>
-            <div class="flex items-center space-x-3">
-              <el-avatar size="small" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
-              <div class="flex-1">
-                <p class="text-sm font-medium text-gray-900">李四更新了用户信息</p>
-                <p class="text-xs text-gray-500">4小时前</p>
-              </div>
-            </div>
-            <div class="flex items-center space-x-3">
-              <el-avatar size="small" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
-              <div class="flex-1">
-                <p class="text-sm font-medium text-gray-900">王五创建了新的分类</p>
-                <p class="text-xs text-gray-500">6小时前</p>
-              </div>
-            </div>
-          </div>
+
+    <!-- 阅读量排行榜 -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-lg font-semibold text-gray-900">阅读量前10书籍</h3>
+        <div class="flex space-x-2">
+          <!-- 控制按钮待填充 -->
         </div>
       </div>
-      
-      <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-        <div class="p-6 border-b border-gray-200">
-          <h2 class="text-lg font-semibold text-gray-900">系统状态</h2>
-        </div>
-        <div class="p-6 space-y-4">
-          <div class="flex items-center justify-between">
-            <span class="text-sm text-gray-600">服务器状态</span>
-            <el-tag type="success" size="small">正常</el-tag>
-          </div>
-          <div class="flex items-center justify-between">
-            <span class="text-sm text-gray-600">数据库连接</span>
-            <el-tag type="success" size="small">正常</el-tag>
-          </div>
-          <div class="flex items-center justify-between">
-            <span class="text-sm text-gray-600">缓存服务</span>
-            <el-tag type="success" size="small">正常</el-tag>
-          </div>
-          <div class="flex items-center justify-between">
-            <span class="text-sm text-gray-600">API服务</span>
-            <el-tag type="success" size="small">正常</el-tag>
-          </div>
-        </div>
-      </div>
+      <div ref="barChartRef" class="h-96 w-full"></div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { User, Document, Folder, Clock } from '@element-plus/icons-vue'
+import { getCategoryBookCountAPI } from "@/api/category/category";
+import type { CategoryBookCount } from "@/api/category/type";
+import { onMounted, ref } from "vue";
+import { initRosePieChart } from "./config";
+import type { WorkReads } from "@/api/works/type";
+import { getTop10WorksReadsAPI } from "@/api/works/works";
+import { initChart } from "@/views/writer/center/config";
+
+// 响应式数据
+const calendarValue = ref(new Date());
+const pieChartRef = ref<HTMLElement>();
+const barChartRef = ref<HTMLElement>();
+
+const categoryBookCount = ref<CategoryBookCount[]>([]);
+const top10WorksReads = ref<WorkReads[]>([]);
+
+const getCategoryBookCount = async () => {
+  const res = await getCategoryBookCountAPI();
+  categoryBookCount.value = res.data || [];
+  initRosePieChart(pieChartRef.value!, categoryBookCount.value);
+};
+
+const getTop10WorksReads = async () => {
+  const res = await getTop10WorksReadsAPI();
+  top10WorksReads.value = res.data || [];
+  initChart(barChartRef.value!, top10WorksReads.value);
+};
+
+// 组件挂载后初始化
+onMounted(() => {
+  getCategoryBookCount();
+  getTop10WorksReads();
+});
 </script>
+
+<style scoped></style>

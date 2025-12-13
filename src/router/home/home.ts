@@ -81,6 +81,11 @@ export const homeRoutes: RouteRecordRaw[] = [
           },
         ],
       },
+      {
+        path: "/home/center",
+        name: "center",
+        component: () => import("@/views/center/center.vue"),
+      },
     ],
   },
   {

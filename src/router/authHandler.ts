@@ -17,5 +17,9 @@ emitter.on("logout", () => {
   removeItem("token");
   removeItem("userInfo");
   emitter.emit("changeFontSize", 16);
+  emitter.emit("message", {
+    type: "success",
+    content: "退出登录成功",
+  });
   router.push("/login");
 });

@@ -75,7 +75,7 @@ export const layoutRoutes: RouteRecordRaw[] = [
         component: () => import("@/layout/chapters/chapters.vue"),
         meta: {
           title: "章节管理",
-          icon: "Book",
+          icon: "Edit",
           requireAuth: true,
         },
       },

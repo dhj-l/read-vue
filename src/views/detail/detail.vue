@@ -155,7 +155,7 @@ const statusType = computed(() =>
           </h2>
         </div>
 
-        <div class="mt-6 flex flex-wrap">
+        <div class="mt-6 flex flex-wrap" v-if="chapterList.length > 0">
           <div
             v-for="ch in chapterList"
             :key="ch.id"
@@ -168,6 +168,7 @@ const statusType = computed(() =>
             >
           </div>
         </div>
+        <el-empty v-else description="暂无章节" />
       </section>
     </div>
   </div>

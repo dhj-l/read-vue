@@ -18,7 +18,7 @@
               <span
                 v-show="!isCollapse"
                 class="text-lg font-semibold text-gray-800"
-                >管理系统</span
+                >小说后台</span
               >
             </div>
           </div>

@@ -16,3 +16,10 @@ export interface CategoryListResponse {
   categories: Category[];
   total: number;
 }
+
+export interface CategoryBookCount {
+  categoryId: number;
+  categoryName: string;
+  description: string;
+  workCount: number;
+}

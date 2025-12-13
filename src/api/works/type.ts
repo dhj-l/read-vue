@@ -71,3 +71,9 @@ export interface UserWorkInfo {
   totalReads: number;
   pendingChecks: number;
 }
+
+export interface WorkReads {
+  workId: number;
+  title: string;
+  readCount: number;
+}

@@ -47,3 +47,27 @@ export const assignRolesAPI = async (id: number, roles: number[]) => {
 export const getUserInfoAPI = async () => {
   return await http.get<UserInfo>("/user/info");
 };
+
+/**
+ * 更新个人信息
+ */
+export const updateUserInfoAPI = async (data: Partial<UserInfo>) => {
+  return await http.put<UserInfo>("/user/info", data);
+};
+
+/**
+ * 修改密码
+ */
+export const updatePasswordAPI = async (data: {
+  currentPassword: string;
+  newPassword: string;
+}) => {
+  return await http.put("/user/password", data);
+};
+
+/**
+ * 更新用户名
+ */
+export const updateUsernameAPI = async (username: string) => {
+  return await http.put<UserInfo>("/user/username", { username });
+};
