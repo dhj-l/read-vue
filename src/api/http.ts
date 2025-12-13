@@ -27,6 +27,11 @@ http.interceptors.response.use(
   },
   async (error) => {
     const { response } = error;
+    // 处理网络错误（无响应情况）
+    if (!response) {
+      emitter.emit("requestError", "网络错误，无法连接到服务器");
+      return Promise.reject(error);
+    }
     // 处理401情况，去除token并且跳转到登录页
     if (response.status === 401) {
       emitter.emit("noAuth");
