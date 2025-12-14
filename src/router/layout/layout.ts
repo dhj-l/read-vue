@@ -40,6 +40,16 @@ export const layoutRoutes: RouteRecordRaw[] = [
         },
       },
       {
+        path: "permissions",
+        name: "Permissions",
+        component: () => import("@/layout/permissions/permissions.vue"),
+        meta: {
+          title: "权限管理",
+          icon: "Key",
+          requireAuth: true,
+        },
+      },
+      {
         path: "categories",
         name: "Categories",
         component: () => import("@/layout/content/categories.vue"),

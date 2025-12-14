@@ -1,5 +1,10 @@
 import http from "../http";
-import type { UserInfo, UserListParams, UserListResponse } from "./type";
+import type {
+  ChangePasswordParams,
+  UserInfo,
+  UserListParams,
+  UserListResponse,
+} from "./type";
 
 /**
  * 获取用户列表
@@ -51,23 +56,16 @@ export const getUserInfoAPI = async () => {
 /**
  * 更新个人信息
  */
-export const updateUserInfoAPI = async (data: Partial<UserInfo>) => {
-  return await http.put<UserInfo>("/user/info", data);
+export const updateUserInfoAPI = async (
+  id: number,
+  data: Partial<UserInfo>
+) => {
+  return await http.patch(`/user/${id}`, data);
 };
 
 /**
  * 修改密码
  */
-export const updatePasswordAPI = async (data: {
-  currentPassword: string;
-  newPassword: string;
-}) => {
-  return await http.put("/user/password", data);
-};
-
-/**
- * 更新用户名
- */
-export const updateUsernameAPI = async (username: string) => {
-  return await http.put<UserInfo>("/user/username", { username });
+export const changePasswordAPI = async (data: ChangePasswordParams) => {
+  return await http.post("/user/change-password", data);
 };

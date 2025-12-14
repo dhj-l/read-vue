@@ -39,3 +39,9 @@ export interface UserInfo extends UserItem {
   roles: RoleItem[];
   works: Work[];
 }
+
+export interface ChangePasswordParams {
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}

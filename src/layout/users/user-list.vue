@@ -117,7 +117,7 @@
 
 <script setup lang="ts">
 import { Search } from "@element-plus/icons-vue";
-import {  tableColumns } from "./config";
+import { tableColumns } from "./config";
 import { onMounted } from "vue";
 import { useUserList } from "./useUserList";
 import { UserStatus } from "@/api/user/type";
