@@ -18,3 +18,11 @@ export interface AddRoleRequest {
   name: string;
   value: string;
 }
+
+/**
+ * 分配权限请求
+ */
+export interface AssignPermissionRequest {
+  roleId: number;
+  permissionIds: number[];
+}

@@ -38,12 +38,21 @@
         :data="permissions"
         v-loading="loading"
       >
-        <template v-for="column in permissionsColumns" :key="column.prop">
-          <el-table-column v-bind="column">
-            <template #="{ row }" v-if="column.prop.includes('Time')">
+        <el-table-column
+          v-for="column in permissionsColumns"
+          :key="column.prop"
+          v-bind="column"
+        >
+          <template #="{ row }">
+            <template v-if="column.prop.includes('Time')">
               {{ formateTime(row[column.prop]) }}
             </template>
-            <template #="{ row }" v-else-if="column.prop === 'actions'">
+            <template v-else-if="column.prop === 'value'">
+              <el-tag>
+                {{ row.value }}
+              </el-tag>
+            </template>
+            <template v-else-if="column.prop === 'actions'">
               <el-button-group>
                 <el-button
                   v-for="btn in btnConfig"
@@ -55,8 +64,8 @@
                 </el-button>
               </el-button-group>
             </template>
-          </el-table-column>
-        </template>
+          </template>
+        </el-table-column>
 
         <template #empty>
           <el-empty description="暂无数据" />

@@ -1,3 +1,4 @@
+import type { PermissionItem } from "../permission/type";
 import type { Work } from "../works/type";
 
 export interface UserListParams {
@@ -27,6 +28,7 @@ export interface RoleItem {
   name: string;
   updateTime: string;
   value: string;
+  permissions: PermissionItem[];
 }
 export interface UserListResponse {
   page: number;

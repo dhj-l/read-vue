@@ -66,6 +66,11 @@ export const rolesColumns: TableColumns[] = [
     align: "center",
   },
   {
+    prop: "permissions",
+    label: "权限",
+    align: "center",
+  },
+  {
     prop: "createTime",
     label: "创建时间",
     align: "center",

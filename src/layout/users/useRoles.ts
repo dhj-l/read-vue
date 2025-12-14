@@ -1,4 +1,4 @@
-import { deleteRoleAPI, getRolesAPI } from "@/api/role/role";
+import { deleteRoleAPI, getRolesAPI, assignPermissionAPI } from "@/api/role/role";
 import type { RoleItem } from "@/api/user/type";
 import { ref } from "vue";
 import type { AddRolesType } from "./components/type";
@@ -16,6 +16,13 @@ export const useRoles = () => {
   const searchKeyword = ref("");
   const open = ref(false);
   const roleData = ref<AddRoleRequest>();
+  
+  // 分配权限相关
+  const permissionDialogVisible = ref(false);
+  const currentRoleId = ref(0);
+  const currentRoleName = ref("");
+  const initialPermissions = ref<number[]>([]);
+  
   const getRoles = async () => {
     loading.value = true;
     try {
@@ -44,20 +51,59 @@ export const useRoles = () => {
   const addRoleHandler = () => {
     getRoles();
   };
+  
   const closeHandler = () => {
     type.value = "add";
     roleData.value = undefined;
   };
+  
   const handleEdit = (row: RoleItem) => {
     type.value = "edit";
     roleData.value = row;
     open.value = true;
   };
+  
   const handleDelete = async (id: number) => {
     await deleteRoleAPI(id);
     ElMessage.success("删除角色成功");
     getRoles();
   };
+  
+  /**
+   * 打开分配权限弹窗
+   */
+  const handleAssignPermission = (row: RoleItem) => {
+    currentRoleId.value = row.id;
+    currentRoleName.value = row.name;
+    // 提取现有权限ID
+    initialPermissions.value = row.permissions?.map(p => p.id) || [];
+    permissionDialogVisible.value = true;
+  };
+  
+  /**
+   * 提交权限分配
+   */
+  const submitAssignPermission = async (permissionIds: number[]) => {
+    try {
+      await assignPermissionAPI({
+        roleId: currentRoleId.value,
+        permissionIds,
+      });
+      ElMessage.success("权限分配成功");
+      permissionDialogVisible.value = false;
+      getRoles(); // 刷新角色列表
+    } catch (error) {
+      ElMessage.error("权限分配失败");
+    }
+  };
+  
+  /**
+   * 关闭权限分配弹窗
+   */
+  const closePermissionDialog = () => {
+    permissionDialogVisible.value = false;
+  };
+  
   const btnConfig = [
     {
       label: "修改",
@@ -67,6 +113,16 @@ export const useRoles = () => {
       },
       click: (row: RoleItem) => {
         handleEdit(row);
+      },
+    },
+    {
+      label: "分配权限",
+      props: {
+        type: "success",
+        link: true,
+      },
+      click: (row: RoleItem) => {
+        handleAssignPermission(row);
       },
     },
     {
@@ -86,6 +142,7 @@ export const useRoles = () => {
       },
     },
   ];
+  
   return {
     roles,
     loading,
@@ -101,5 +158,12 @@ export const useRoles = () => {
     resetHandler,
     addRoleHandler,
     closeHandler,
+    // 分配权限相关
+    permissionDialogVisible,
+    currentRoleId,
+    currentRoleName,
+    initialPermissions,
+    submitAssignPermission,
+    closePermissionDialog,
   };
 };

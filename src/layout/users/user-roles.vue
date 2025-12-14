@@ -50,6 +50,19 @@
                 </el-button>
               </el-button-group>
             </template>
+            <template #="{ row }" v-else-if="column.prop === 'permissions'">
+              <template v-if="row[column.prop].length > 0">
+                <el-tag
+                  class="mr-2 mb-2"
+                  v-for="item in row[column.prop]"
+                  :key="item.name"
+                  type="primary"
+                  size="small"
+                  >{{ item.name }}</el-tag
+                >
+              </template>
+              <el-tag v-else type="danger">暂无权限</el-tag>
+            </template>
           </el-table-column>
         </template>
 
@@ -79,6 +92,16 @@
       :role-data="roleData"
       :role-id="roleData?.id"
     />
+
+    <!-- 分配权限弹窗 -->
+    <AssignPermission
+      v-model:visible="permissionDialogVisible"
+      :role-id="currentRoleId"
+      :role-name="currentRoleName"
+      :initial-permissions="initialPermissions"
+      @submit="submitAssignPermission"
+      @cancel="closePermissionDialog"
+    />
   </div>
 </template>
 
@@ -88,6 +111,7 @@ import { rolesColumns } from "@/layout/users/config";
 import { useRoles } from "@/layout/users/useRoles";
 import { onMounted } from "vue";
 import AddRoles from "./components/add-roles.vue";
+import AssignPermission from "./components/assign-permission.vue";
 import { formateTime } from "@/utils/formdate";
 
 const {
@@ -105,6 +129,13 @@ const {
   resetHandler,
   addRoleHandler,
   closeHandler,
+  // 分配权限相关
+  permissionDialogVisible,
+  currentRoleId,
+  currentRoleName,
+  initialPermissions,
+  submitAssignPermission,
+  closePermissionDialog,
 } = useRoles();
 
 onMounted(() => {

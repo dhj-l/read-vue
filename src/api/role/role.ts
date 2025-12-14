@@ -1,5 +1,5 @@
 import http from "../http";
-import type { AddRoleRequest, RoleListParams, RolesResponse } from "./type";
+import type { AddRoleRequest, AssignPermissionRequest, RoleListParams, RolesResponse } from "./type";
 
 export const getRolesAPI = async (params: RoleListParams) => {
   return http.get<RolesResponse>("/role", {
@@ -26,4 +26,11 @@ export const updateRoleAPI = async (id: number, data: AddRoleRequest) => {
  */
 export const deleteRoleAPI = async (id: number) => {
   return await http.delete(`/role/${id}`);
+};
+
+/**
+ * 分配权限
+ */
+export const assignPermissionAPI = async (data: AssignPermissionRequest) => {
+  return await http.post("/role/assign-permission", data);
 };
