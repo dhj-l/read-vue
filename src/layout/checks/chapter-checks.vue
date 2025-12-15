@@ -25,17 +25,21 @@
       class="flex-1 overflow-auto bg-white rounded-lg shadow-sm border border-gray-200 p-4"
     >
       <el-table border stripe class="h-full" :data="list" v-loading="loading">
-        <template v-for="column in tableColumns" :key="column.prop">
-          <el-table-column v-bind="column">
-            <template #="{ row }" v-if="column.prop.includes('Time')">
+        <el-table-column
+          v-for="column in tableColumns"
+          :key="column.prop"
+          v-bind="column"
+        >
+          <template #="{ row }">
+            <template v-if="column.prop.includes('Time')">
               {{ formateTime(row[column.prop]) }}
             </template>
-            <template #="{ row }" v-else-if="column.prop === 'user'">
+            <template v-else-if="column.prop === 'user'">
               <div class="flex flex-col items-center">
                 <div>{{ row.user?.username }}</div>
               </div>
             </template>
-            <template #="{ row }" v-else-if="column.prop === 'chapter'">
+            <template v-else-if="column.prop === 'chapter'">
               <div class="flex flex-col items-center">
                 <div>{{ row.chapter?.name }}</div>
                 <div class="text-gray-400 text-xs">
@@ -43,12 +47,12 @@
                 </div>
               </div>
             </template>
-            <template #="{ row }" v-else-if="column.prop === 'status'">
+            <template v-else-if="column.prop === 'status'">
               <el-tag :type="statusTagType(row.status)">{{
                 statusText(row.status)
               }}</el-tag>
             </template>
-            <template #="{ row }" v-else-if="column.prop === 'actions'">
+            <template v-else-if="column.prop === 'actions'">
               <el-button-group v-for="btn in btnConfig" :key="btn.label">
                 <el-button
                   v-bind="btn.props"
@@ -59,8 +63,9 @@
                 </el-button>
               </el-button-group>
             </template>
-          </el-table-column>
-        </template>
+          </template>
+        </el-table-column>
+
         <template #empty>
           <el-empty description="暂无数据" />
         </template>

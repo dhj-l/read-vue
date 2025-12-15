@@ -40,6 +40,7 @@ export interface UserListResponse {
 export interface UserInfo extends UserItem {
   roles: RoleItem[];
   works: Work[];
+  permissions: string[];
 }
 
 export interface ChangePasswordParams {

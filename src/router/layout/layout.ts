@@ -16,89 +16,102 @@ export const layoutRoutes: RouteRecordRaw[] = [
           title: "仪表盘",
           icon: "House",
           requireAuth: true,
-        },
-      },
-      // 用户管理模块
-      {
-        path: "user-list",
-        name: "UserList",
-        component: () => import("@/layout/users/user-list.vue"),
-        meta: {
-          title: "用户列表",
-          icon: "UserFilled",
-          requireAuth: true,
-        },
-      },
-      {
-        path: "user-roles",
-        name: "UserRoles",
-        component: () => import("@/layout/users/user-roles.vue"),
-        meta: {
-          title: "角色管理",
-          icon: "Avatar",
-          requireAuth: true,
-        },
-      },
-      {
-        path: "permissions",
-        name: "Permissions",
-        component: () => import("@/layout/permissions/permissions.vue"),
-        meta: {
-          title: "权限管理",
-          icon: "Key",
-          requireAuth: true,
-        },
-      },
-      {
-        path: "categories",
-        name: "Categories",
-        component: () => import("@/layout/content/categories.vue"),
-        meta: {
-          title: "分类管理",
-          icon: "Folder",
-          requireAuth: true,
-        },
-      },
-      {
-        path: "works",
-        name: "Works",
-        component: () => import("@/layout/works/works.vue"),
-        meta: {
-          title: "作品管理",
-          icon: "DocumentCopy",
-          requireAuth: true,
-        },
-      },
-      {
-        path: "book-checks",
-        name: "BookChecks",
-        component: () => import("@/layout/checks/book-checks.vue"),
-        meta: {
-          title: "审核管理",
-          icon: "Edit",
-          requireAuth: true,
-        },
-      },
-      {
-        path: "chapters",
-        name: "Chapters",
-        component: () => import("@/layout/chapters/chapters.vue"),
-        meta: {
-          title: "章节管理",
-          icon: "Edit",
-          requireAuth: true,
-        },
-      },
-      {
-        path: "chapter-checks",
-        name: "ChapterChecks",
-        component: () => import("@/layout/checks/chapter-checks.vue"),
-        meta: {
-          title: "章节审核管理",
-          icon: "Edit",
-          requireAuth: true,
+          permission: "dashboard",
         },
       },
     ],
+  },
+];
+
+// 权限路由
+export const permissionRoutes: RouteRecordRaw[] = [
+  // 用户管理模块
+  {
+    path: "user-list",
+    name: "UserList",
+    component: () => import("@/layout/users/user-list.vue"),
+    meta: {
+      title: "用户列表",
+      icon: "UserFilled",
+      requireAuth: true,
+      permission: "user-list",
+    },
+  },
+  {
+    path: "user-roles",
+    name: "UserRoles",
+    component: () => import("@/layout/users/user-roles.vue"),
+    meta: {
+      title: "角色管理",
+      icon: "Avatar",
+      requireAuth: true,
+      permission: "user-roles",
+    },
+  },
+  {
+    path: "permissions",
+    name: "Permissions",
+    component: () => import("@/layout/permissions/permissions.vue"),
+    meta: {
+      title: "权限管理",
+      icon: "Key",
+      requireAuth: true,
+      permission: "permissions",
+    },
+  },
+  {
+    path: "categories",
+    name: "Categories",
+    component: () => import("@/layout/content/categories.vue"),
+    meta: {
+      title: "分类管理",
+      icon: "Folder",
+      requireAuth: true,
+      permission: "categories",
+    },
+  },
+  {
+    path: "works",
+    name: "Works",
+    component: () => import("@/layout/works/works.vue"),
+    meta: {
+      title: "作品管理",
+      icon: "DocumentCopy",
+      requireAuth: true,
+      permission: "works",
+    },
+  },
+  {
+    path: "book-checks",
+    name: "BookChecks",
+    component: () => import("@/layout/checks/book-checks.vue"),
+    meta: {
+      title: "审核管理",
+      icon: "Edit",
+      requireAuth: true,
+      permission: "book-checks",
+    },
+  },
+  {
+    path: "chapters",
+    name: "Chapters",
+    component: () => import("@/layout/chapters/chapters.vue"),
+    meta: {
+      title: "章节管理",
+      icon: "Edit",
+      requireAuth: true,
+      permission: "chapters",
+    },
+  },
+  {
+    path: "chapter-checks",
+    name: "ChapterChecks",
+    component: () => import("@/layout/checks/chapter-checks.vue"),
+    meta: {
+      title: "章节审核管理",
+      icon: "Edit",
+      requireAuth: true,
+      permission: "chapter-checks",
+    },
   },
 ];
