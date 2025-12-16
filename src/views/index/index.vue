@@ -1,9 +1,13 @@
 <template>
   <div class="w-full h-full">
     <el-carousel trigger="click" height="410px">
-      <el-carousel-item v-for="item in 4" :key="item" class="w-full h-full">
+      <el-carousel-item
+        v-for="item in bannerList"
+        :key="item.id"
+        class="w-full h-full"
+      >
         <img
-          src="@/assets/image/3.jpg"
+          :src="API_BASE_URL + item.imgUrl"
           alt=""
           class="w-full h-full object-cover"
         />
@@ -60,8 +64,11 @@ import BookCard from "@/components/book-card/book-card.vue";
 import { onMounted, ref } from "vue";
 import type { Work } from "@/api/works/type";
 import { getWorksListAPI } from "@/api/works/works";
+import type { Banner } from "@/api/banner/type";
+import { getBannerListAPI } from "@/api/banner/banner";
+import { API_BASE_URL } from "@/config/config";
 const workList = ref<Work[]>([]);
-
+const bannerList = ref<Banner[]>([]);
 const getWorkList = async () => {
   const res = await getWorksListAPI({
     status: 6,
@@ -70,8 +77,17 @@ const getWorkList = async () => {
   });
   workList.value = res.data.works || [];
 };
+const getBannerList = async () => {
+  const res = await getBannerListAPI({
+    status: 1,
+    page: 1,
+    pageSize: 10,
+  });
+  bannerList.value = res.data.list || [];
+};
 onMounted(() => {
   getWorkList();
+  getBannerList();
 });
 </script>
 

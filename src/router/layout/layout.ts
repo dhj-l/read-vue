@@ -114,6 +114,17 @@ export const permissionRoutes: RouteRecordRaw[] = [
       permission: "chapter-checks",
     },
   },
+  {
+    path: "banner",
+    name: "Banner",
+    component: () => import("@/layout/banner/banner.vue"),
+    meta: {
+      title: "轮播图管理",
+      icon: "Edit",
+      requireAuth: true,
+      permission: "banner",
+    },
+  },
 ];
 
 //404页面（放在最后作为兜底路由）
