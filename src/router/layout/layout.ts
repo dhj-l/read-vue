@@ -23,7 +23,7 @@ export const layoutRoutes: RouteRecordRaw[] = [
   },
 ];
 
-// 权限路由
+// 权限路由（作为 /layout 的子路由）
 export const permissionRoutes: RouteRecordRaw[] = [
   // 用户管理模块
   {
@@ -112,6 +112,27 @@ export const permissionRoutes: RouteRecordRaw[] = [
       icon: "Edit",
       requireAuth: true,
       permission: "chapter-checks",
+    },
+  },
+];
+
+//404页面（放在最后作为兜底路由）
+export const notFoundRoute: RouteRecordRaw[] = [
+  {
+    path: "404",
+    name: "NotFound",
+    component: () => import("@/layout/404/404.vue"),
+    meta: {
+      title: "页面不存在",
+      requireAuth: false, // 404页面不需要权限
+    },
+  },
+  // 通配符路由，匹配所有不存在的路径
+  {
+    path: ":pathMatch(.*)*",
+    redirect: "/layout/404",
+    meta: {
+      requireAuth: false,
     },
   },
 ];

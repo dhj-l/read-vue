@@ -17,7 +17,7 @@
         </template>
       </el-input>
     </div>
-    <div v-loading="loading">
+    <div v-loading="loading" class="w-full">
       <BookList
         :sortConfig="sortConfig"
         :work-list="workList"

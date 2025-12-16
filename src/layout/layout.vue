@@ -37,7 +37,7 @@
             <!-- 动态渲染菜单 -->
             <template v-for="route in menuRoutes" :key="route.path">
               <!-- 单级菜单 -->
-              <el-menu-item :index="getMenuPath(route)">
+              <el-menu-item :index="route.path">
                 <el-icon>
                   <component :is="toRaw(route.meta?.icon)" />
                 </el-icon>
@@ -83,36 +83,30 @@
 
             <!-- 右侧用户信息 -->
             <div class="flex items-center space-x-4">
-              <!-- 通知 -->
-              <el-badge :value="3" class="item">
-                <el-button link class="text-gray-600 hover:text-gray-800">
-                  <el-icon size="18"><Bell /></el-icon>
-                </el-button>
-              </el-badge>
-
               <!-- 用户头像和下拉菜单 -->
               <el-dropdown trigger="click">
                 <div
                   class="flex items-center space-x-2 cursor-pointer hover:bg-gray-50 px-3 py-2 rounded-lg"
                 >
                   <el-avatar
+                    v-if="userInfo?.avatar_url"
                     size="small"
-                    src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+                    :src="API_BASE_URL + userInfo?.avatar_url"
                   />
-                  <span class="text-sm font-medium text-gray-700">管理员</span>
+                  <div
+                    v-else
+                    class="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center"
+                  >
+                    {{ userInfo?.username?.charAt(0) }}
+                  </div>
+                  <span class="text-sm font-medium text-gray-700">{{
+                    userInfo?.username
+                  }}</span>
                   <el-icon class="text-gray-400"><ArrowDown /></el-icon>
                 </div>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item>
-                      <el-icon><User /></el-icon>
-                      个人中心
-                    </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-icon><Setting /></el-icon>
-                      个人设置
-                    </el-dropdown-item>
-                    <el-dropdown-item divided>
+                    <el-dropdown-item @click="handleLogout">
                       <el-icon><SwitchButton /></el-icon>
                       退出登录
                     </el-dropdown-item>
@@ -135,21 +129,24 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, toRaw } from "vue";
+import { ref, computed, toRaw } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import {
   Expand,
   Fold,
-  Bell,
   ArrowDown,
   Platform,
   SwitchButton,
 } from "@element-plus/icons-vue";
+import { storeToRefs } from "pinia";
+import { useUserStore } from "@/stores/modules/user/user";
+import { API_BASE_URL } from "@/config/config";
+import emitter from "@/utils/eventEmitter";
 
 const route = useRoute();
 const router = useRouter();
 const isCollapse = ref(false);
-
+const { userInfo } = storeToRefs(useUserStore());
 // 当前激活的菜单
 const activeMenu = computed(() => route.path);
 
@@ -164,21 +161,24 @@ const breadcrumbs = computed(() => {
 
 // 获取菜单路由
 const menuRoutes = computed(() => {
+  console.log(router.getRoutes());
   const layoutRoute = router
     .getRoutes()
-    .find((route) => route.path === "/layout");
-  return layoutRoute?.children || [];
-});
+    .filter(
+      (route) => route.path.includes("/layout") && route.meta.requireAuth
+    );
 
-// 获取菜单路径
-const getMenuPath = (route: any) => {
-  const fullPath = `/layout/${route.path}`;
-  return fullPath.replace("//", "/");
-};
+  return layoutRoute || [];
+});
 
 // 切换侧边栏折叠状态
 const toggleCollapse = () => {
   isCollapse.value = !isCollapse.value;
+};
+
+// 退出登录
+const handleLogout = () => {
+  emitter.emit("logout");
 };
 </script>
 

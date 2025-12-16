@@ -19,6 +19,8 @@ type Events = {
   nextChapter: {
     play: boolean;
   };
+  permission: void;
+  permissionAdded: void;
 };
 
 const emitter = mitt<Events>();
