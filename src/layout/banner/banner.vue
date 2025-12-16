@@ -100,7 +100,6 @@ import BannerEditDialog from "./components/banner-edit-dialog.vue";
 import { tableColumns } from "./config";
 import { API_BASE_URL } from "@/config/config";
 import { formateTime } from "@/utils/formdate";
-import { storeToRefs } from "pinia";
 
 const {
   bannerList,
@@ -115,7 +114,7 @@ const {
   handleDeleteBanner,
 } = useBanner();
 
-const { total, page, pageSize } = storeToRefs(useBanner());
+const { total, page, pageSize } = useBanner();
 
 onMounted(() => {
   getBannerList();
