@@ -8,6 +8,7 @@
       <!-- 标题 -->
       <div
         class="text-[18px] flex min-w-[120px] h-full items-center cursor-pointer text-gray-800 hover:text-gray-900 dark:text-[#b3b3b3] dark:hover:text-white"
+        @click="backToPrevChapter"
       >
         <ArrowLeft class="w-[20px] h-[20px] mr-[12px]" />
 
@@ -80,6 +81,9 @@ import { useUserStore } from "@/stores/modules/user/user";
 import { storeToRefs } from "pinia";
 import { formateTime } from "@/utils/formdate";
 import type { ReadChapterEmits, ReadChapterProps } from "./type";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 //章节阅读器
 const props = withDefaults(defineProps<ReadChapterProps>(), {
@@ -91,7 +95,9 @@ const props = withDefaults(defineProps<ReadChapterProps>(), {
 const emits = defineEmits<ReadChapterEmits>();
 const { dropMenuConfigs, btnConfig, idxIndex } = useReadChapter(props, emits);
 const { userInfo } = storeToRefs(useUserStore());
-
+const backToPrevChapter = () => {
+  router.back();
+};
 // dark mode handled via tailwind dark: variants inherited from reader container
 </script>
 

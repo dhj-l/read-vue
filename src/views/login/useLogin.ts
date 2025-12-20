@@ -3,7 +3,6 @@ import type { RegisterParams } from "@/api/login/type";
 import { ElMessage, type ElForm } from "element-plus";
 import { getCodeAPI, registerAPI } from "../../api/login/login";
 import { useUserStore } from "@/stores/modules/user/user";
-import { useRouter } from "vue-router";
 import emitter from "@/utils/eventEmitter";
 export const useLogin = () => {
   const loginOrRegister = ref<"login" | "register">("login");
@@ -16,7 +15,7 @@ export const useLogin = () => {
     return loadding.value || countDown.value > 0 || !formData.value.email;
   });
   const { login } = useUserStore();
-  const router = useRouter();
+
   const formData = ref<RegisterParams>({
     username: "",
     password: "",
@@ -24,6 +23,16 @@ export const useLogin = () => {
     code: "",
   });
   const formRef = ref<ComponentInstance<typeof ElForm>>();
+
+  const btnName = computed(() => {
+    return loginOrRegister.value === "login" ? "去注册" : "去登录";
+  });
+
+  const changeLoginOrRegister = () => {
+    loginOrRegister.value =
+      loginOrRegister.value === "login" ? "register" : "login";
+  };
+
   const validateEmail = (rule: any, value: string, callback: any) => {
     const emailRegex = /^[1-9][0-9]{4,10}@qq\.com$/;
     if (!value) {
@@ -36,6 +45,7 @@ export const useLogin = () => {
       callback();
     }
   };
+
   // 验证码格式验证函数
   const validateCode = (rule: any, value: string, callback: any) => {
     if (loginOrRegister.value === "register") {
@@ -157,8 +167,10 @@ export const useLogin = () => {
     rules,
     formRef,
     submitLoading,
+    btnName,
     getCode,
     handleSubmit,
     cleanup,
+    changeLoginOrRegister,
   };
 };

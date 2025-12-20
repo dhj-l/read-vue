@@ -69,15 +69,15 @@
             >{{ loginOrRegister === "login" ? "登录" : "注册" }}</el-button
           >
         </el-form-item>
-        <el-form-item v-if="loginOrRegister === 'login'">
+        <el-form-item>
           <el-button
             size="large"
             link
             round
             class="w-full"
             type="primary"
-            @click="loginOrRegister = 'register'"
-            >注册</el-button
+            @click="changeLoginOrRegister"
+            >{{ btnName }}</el-button
           >
         </el-form-item>
       </el-form>
@@ -96,8 +96,10 @@ const {
   rules,
   formRef,
   submitLoading,
+  btnName,
   getCode,
   handleSubmit,
+  changeLoginOrRegister,
 } = useLogin();
 </script>
 

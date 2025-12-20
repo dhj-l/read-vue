@@ -2,6 +2,7 @@ import { getConversationListAPI } from "@/api/conversations/conversations";
 import type { ConversationItem } from "@/api/conversations/type";
 import { getMessageListAPI } from "@/api/messages/messages";
 import type { Message } from "@/components/chat/type";
+
 import { getItem, removeItem, setItem } from "@/utils/storage";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
@@ -62,6 +63,7 @@ export const useMessageStore = defineStore("message", () => {
     conversationId.value = "";
     messageList.value = [];
   };
+
   return {
     messageList,
     conversationId,

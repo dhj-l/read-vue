@@ -4,7 +4,7 @@
     <div class="flex-1 flex justify-center bg-[#f5f5f5]">
       <RouterView />
     </div>
-    <Footer class="h-[348px]" />
+    <Footer class="" />
   </div>
 </template>
 

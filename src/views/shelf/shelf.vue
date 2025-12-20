@@ -38,6 +38,7 @@
           v-model:page-size="pageSize"
           :page-sizes="[10, 20, 50, 100]"
           :total="total"
+          :hide-on-single-page="true"
           layout="total, sizes, prev, pager, next, jumper"
           @current-change="getShelfList"
           @size-change="getShelfList"

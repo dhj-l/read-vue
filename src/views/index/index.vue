@@ -32,10 +32,10 @@
         </div>
       </div>
     </div>
-    <div class="w-[1380px] mx-auto">
+    <div class="w-[1380px] mx-auto mb-10">
       <div class="flex items-center justify-between mt-3">
         <h2 class="text-xl font-semibold">热门书籍</h2>
-        <el-link type="primary">更多</el-link>
+        <el-link type="primary" @click="gotoMore">更多</el-link>
       </div>
       <div class="flex flex-col">
         <div class="flex flex-wrap">
@@ -67,8 +67,11 @@ import { getWorksListAPI } from "@/api/works/works";
 import type { Banner } from "@/api/banner/type";
 import { getBannerListAPI } from "@/api/banner/banner";
 import { API_BASE_URL } from "@/config/config";
+import { useRouter } from "vue-router";
+import emitter from "@/utils/eventEmitter";
 const workList = ref<Work[]>([]);
 const bannerList = ref<Banner[]>([]);
+const router = useRouter();
 const getWorkList = async () => {
   const res = await getWorksListAPI({
     status: 6,
@@ -84,6 +87,12 @@ const getBannerList = async () => {
     pageSize: 10,
   });
   bannerList.value = res.data.list || [];
+};
+const gotoMore = () => {
+  router.push({
+    path: "/home/library",
+  });
+  emitter.emit('changeActive', 'library')
 };
 onMounted(() => {
   getWorkList();

@@ -10,7 +10,9 @@ import type {
 
 // 获取banner列表
 export const getBannerListAPI = async (params?: FindAllBannerParams) => {
-  return await http.get<BannerListResponse>("/banner/list");
+  return await http.get<BannerListResponse>("/banner/list", {
+    params,
+  });
 };
 
 // 获取单个banner详情

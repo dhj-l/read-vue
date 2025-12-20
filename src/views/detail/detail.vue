@@ -6,6 +6,7 @@ import { useDetail } from "./useDetail";
 import { API_BASE_URL } from "@/config/config";
 import { workStatusMap } from "@/layout/works/config";
 import { formateCount, formateTime } from "@/utils/formdate";
+
 const {
   workInfo,
   chapterList,
@@ -23,19 +24,6 @@ onMounted(() => {
 
   getChapterList(currentId.value);
 });
-
-//TODO：后期需要删除
-interface AuthorInfo {
-  name: string;
-  avatar: string;
-  bio: string;
-}
-
-const author: AuthorInfo = {
-  name: "三九音域",
-  avatar: "https://avatars.githubusercontent.com/u/9919?s=64&v=4",
-  bio: "用心写出不一样的故事",
-};
 
 const statusLabel = computed(() =>
   workInfo.value ? workStatusMap.get(workInfo.value.status)?.label ?? "" : ""
@@ -121,7 +109,10 @@ const statusType = computed(() =>
         </div>
         <div class="h-[224px] w-[30%] flex items-center justify-center">
           <div class="flex flex-col items-center">
-            <el-avatar :size="72" :src="author.avatar" />
+            <el-avatar
+              :size="72"
+              :src="API_BASE_URL + workInfo?.user?.avatar_url || ''"
+            />
             <div class="mt-3 flex items-center">
               <el-tag type="warning" size="small" effect="light" class="mr-2">
                 <el-icon class="mr-1"><EditPen /></el-icon>
@@ -131,7 +122,6 @@ const statusType = computed(() =>
                 workInfo?.user.username || "无名氏"
               }}</span>
             </div>
-            <div class="mt-2 text-sm text-gray-500">{{ author.bio }}</div>
           </div>
         </div>
       </div>

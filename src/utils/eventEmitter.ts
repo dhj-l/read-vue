@@ -21,6 +21,7 @@ type Events = {
   };
   permission: void;
   permissionAdded: void;
+  changeActive: string;
 };
 
 const emitter = mitt<Events>();

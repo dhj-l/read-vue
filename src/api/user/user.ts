@@ -69,3 +69,10 @@ export const updateUserInfoAPI = async (
 export const changePasswordAPI = async (data: ChangePasswordParams) => {
   return await http.post("/user/change-password", data);
 };
+
+/**
+ * 成为作者
+ */
+export const becomeAuthorAPI = async () => {
+  return await http.post("/user/author");
+};

@@ -7,8 +7,13 @@ const whiteList = ["/login", "/home"];
 // 标记是否已经添加过动态路由
 let hasDynamicRoutesAdded = false;
 
+// 导出重置函数，供退出登录时调用
+export const resetDynamicRoutes = () => {
+  hasDynamicRoutesAdded = false;
+};
+
 router.beforeEach(async (to, from, next) => {
-  console.log(to, from);
+  console.log(to, from, "出发了");
   const token = getItem("token", false);
   if (token) {
     if (to.path === "/login") {
